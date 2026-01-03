@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/nav_playlist"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="Playlist" />
+
+    <item
+        android:id="@+id/nav_music"
+        android:icon="@android:drawable/ic_media_play"
+        android:title="Music" />
+        
+    <item
+        android:id="@+id/nav_favourites"
+        android:icon="@android:drawable/star_on"
+        android:title="Favourites" />
+
+</menu>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Premium Music Player Colors (Dark Theme) -->
+    <color name="primary_color">#6200EA</color> <!-- Deep Purple -->
+    <color name="primary_variant">#3700B3</color>
+    <color name="secondary_color">#03DAC6</color> <!-- Teal Accent -->
+    <color name="background_color">#121212</color> <!-- Dark Background -->
+    <color name="surface_color">#1E1E1E</color> <!-- Slightly lighter for cards -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B3FFFFFF</color> <!-- 70% White -->
+    <color name="icon_tint">#FFFFFF</color>
+</resources>

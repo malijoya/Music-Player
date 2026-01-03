@@ -2,4 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- Premium Music Player Colors (Light Theme) -->
+    <color name="primary_color">#6200EA</color> <!-- Deep Purple (Keeping brand color) -->
+    <color name="primary_variant">#3700B3</color>
+    <color name="secondary_color">#018786</color> <!-- Teal (Darker for light bg) -->
+    <color name="background_color">#F5F5F5</color> <!-- Light Grey Background -->
+    <color name="surface_color">#FFFFFF</color> <!-- White for cards -->
+    <color name="text_primary">#212121</color> <!-- Dark Grey Text -->
+    <color name="text_secondary">#757575</color> <!-- Medium Grey Text -->
+    <color name="icon_tint">#6200EA</color> <!-- Tint icons with primary color -->
 </resources>
