@@ -21,7 +21,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@android:drawable/ic_menu_my_music"
+            android:src="@drawable/ic_launcher_foreground"
             app:tint="@color/primary_color"
             android:padding="8dp"/>
     </com.google.android.material.card.MaterialCardView>

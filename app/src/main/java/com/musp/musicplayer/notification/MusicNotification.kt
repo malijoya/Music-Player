@@ -61,15 +61,14 @@ class MusicNotification {
                 .setSmallIcon(R.drawable.ic_launcher_foreground) // Placeholder logic, usually explicit icon
                 .setContentTitle(song.title)
                 .setContentText(song.artist)
-                .setLargeIcon(null) // TODO: Convert album art URI to Bitmap
-                .setOnlyAlertOnce(true)
+                // .setLargeIcon(null) // TODO: Convert album art URI to Bitmap
                 .setShowWhen(false)
                 .setContentIntent(contentPendingIntent)
                 .addAction(android.R.drawable.ic_media_previous, "Previous", prevPendingIntent)
                 .addAction(playPauseIcon, "Play", playPendingIntent)
                 .addAction(android.R.drawable.ic_media_next, "Next", nextPendingIntent)
                 .setStyle(
-                    Notification.MediaStyle()
+                    MediaStyle()
                     .setShowActionsInCompactView(0, 1, 2)
                     .setMediaSession(null)) // TODO: Link MediaSession
                 .setPriority(NotificationCompat.PRIORITY_LOW)
@@ -78,9 +77,29 @@ class MusicNotification {
     }
 }
 
-// Dummy Receiver class to allow compilation of Intents
+// Receiver to handle notification button clicks
 class MusicNotificationReceiver : android.content.BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        // Handle actions
+        if (context == null || intent == null) return
+        
+        // Get reference to MusicService (this is a simplified approach)
+        // In production, you'd use a more robust binding mechanism
+        val serviceIntent = Intent(context, com.musp.musicplayer.service.MusicService::class.java)
+        
+        when (intent.action) {
+            MusicNotification.ACTION_PREVIOUS -> {
+                // Broadcast intent to service
+                val action = Intent("com.musp.musicplayer.ACTION_PREVIOUS")
+                context.sendBroadcast(action)
+            }
+            MusicNotification.ACTION_PLAY -> {
+                val action = Intent("com.musp.musicplayer.ACTION_PLAY_PAUSE")
+                context.sendBroadcast(action)
+            }
+            MusicNotification.ACTION_NEXT -> {
+                val action = Intent("com.musp.musicplayer.ACTION_NEXT")
+                context.sendBroadcast(action)
+            }
+        }
     }
 }
