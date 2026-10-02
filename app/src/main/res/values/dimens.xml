@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="art_corner_small">8dp</dimen>
+    <!-- Spacing scale -->
+    <dimen name="space_sm">8dp</dimen>
+    <dimen name="space_md">12dp</dimen>
+    <dimen name="space_lg">16dp</dimen>
+
+    <!-- Horizontal gutter of every screen (grows on tablets) -->
+    <dimen name="screen_gutter">20dp</dimen>
+
+    <!-- Radius scale -->
+    <dimen name="radius_md">14dp</dimen>
+    <dimen name="radius_lg">20dp</dimen>
+    <dimen name="radius_xl">28dp</dimen>
+
+    <dimen name="art_corner_small">12dp</dimen>
+    <dimen name="glass_stroke_width">1dp</dimen>
+    <dimen name="icon_button_size">44dp</dimen>
+    <dimen name="row_art_size">52dp</dimen>
+
     <!-- Minimum album tile width used to compute the grid span count -->
     <dimen name="album_grid_min_width">160dp</dimen>
+    <!-- Max width of the Now Playing artwork on large screens -->
+    <dimen name="player_art_max">420dp</dimen>
 </resources>

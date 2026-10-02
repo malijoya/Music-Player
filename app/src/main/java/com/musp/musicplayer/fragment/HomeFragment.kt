@@ -21,6 +21,7 @@ import com.musp.musicplayer.data.LibraryState
 import com.musp.musicplayer.databinding.FragmentHomeBinding
 import com.musp.musicplayer.model.Song
 import com.musp.musicplayer.ui.hide
+import com.musp.musicplayer.ui.padForBottomChrome
 import com.musp.musicplayer.ui.renderLibraryGate
 import com.musp.musicplayer.ui.showEmpty
 import com.musp.musicplayer.ui.showSongMenu
@@ -28,6 +29,7 @@ import com.musp.musicplayer.viewmodel.LibraryViewModel
 import com.musp.musicplayer.viewmodel.PlayerViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class HomeFragment : Fragment() {
 
@@ -58,6 +60,8 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = recentAdapter
         }
+        padForBottomChrome(binding.recyclerRecent, binding.emptyState.root)
+        binding.tvGreeting.setText(greetingForNow())
 
         binding.searchBar.setOnClickListener {
             (activity as? MainActivity)?.navigateTo(SearchFragment())
@@ -100,6 +104,12 @@ class HomeFragment : Fragment() {
             )
             else -> binding.emptyState.hide()
         }
+    }
+
+    private fun greetingForNow(): Int = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
+        in 5..11 -> R.string.greeting_morning
+        in 12..16 -> R.string.greeting_afternoon
+        else -> R.string.greeting_evening
     }
 
     private fun showThemeDialog() {

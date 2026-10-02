@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/listHeader"
@@ -13,8 +12,9 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="8dp"
+        android:paddingHorizontal="@dimen/screen_gutter"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,22 +26,24 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
+            android:textAppearance="@style/TextAppearance.MusicPlayer.Overline"
             tools:text="120 songs" />
 
         <ImageButton
             android:id="@+id/btnSort"
-            style="@style/Widget.MusicPlayer.IconButton"
+            style="@style/Widget.MusicPlayer.IconButton.Glass"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:contentDescription="@string/sort"
-            android:src="@drawable/ic_sort" />
+            android:src="@drawable/ic_sort"
+            app:tint="@color/text_primary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnShuffle"
-            style="@style/Widget.Material3.Button.TonalButton"
+            style="@style/Widget.MusicPlayer.Button.Tonal.Small"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
             android:text="@string/shuffle"
             app:icon="@drawable/ic_shuffle" />
     </LinearLayout>
@@ -51,18 +53,21 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/space_sm"
         android:paddingTop="4dp"
-        android:paddingBottom="8dp"
+        android:paddingBottom="@dimen/space_lg"
+        android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listHeader" />
 
-    <ProgressBar
+    <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminate="true"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +78,7 @@
         android:id="@+id/emptyState"
         layout="@layout/view_empty_state"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

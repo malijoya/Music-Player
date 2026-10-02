@@ -66,8 +66,10 @@ class SongAdapter(
 
     private fun bindCurrent(holder: SongViewHolder, song: Song) {
         val context = holder.itemView.context
-        val color = if (song.id == currentSongId) R.color.accent_color else R.color.text_primary
+        val isCurrent = song.id == currentSongId
+        val color = if (isCurrent) R.color.accent_color else R.color.text_primary
         holder.binding.tvTitle.setTextColor(ContextCompat.getColor(context, color))
+        holder.binding.root.isActivated = isCurrent // soft accent row background
     }
 
     /** Highlights the song that is currently playing. */

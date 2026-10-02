@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -30,6 +31,7 @@ import com.musp.musicplayer.utils.MusicUtils
 import com.musp.musicplayer.utils.loadArtwork
 import com.musp.musicplayer.viewmodel.PlaybackUiState
 import com.musp.musicplayer.viewmodel.PlayerViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -55,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                 this, MusicUtils.getAudioPermission()
             )
             Snackbar.make(binding.root, R.string.permission_denied_message, Snackbar.LENGTH_LONG)
-                .setAnchorView(binding.bottomNavigation)
+                .setAnchorView(binding.bottomChrome)
                 .apply {
                     if (permissionPermanentlyDenied) setAction(R.string.open_settings) { openAppSettings() }
                 }
@@ -69,11 +71,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root) // Set content view via ViewBinding
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0) // Leave bottom padding for nav
-            insets
-        }
+        setupWindowInsets()
 
         permissionPermanentlyDenied = savedInstanceState?.getBoolean(KEY_PERMISSION_DENIED) ?: false
 
@@ -101,6 +99,7 @@ class MainActivity : AppCompatActivity() {
                 // Switching tabs discards detail screens opened from the previous tab
                 supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.tab_enter, R.anim.tab_exit)
                     .replace(R.id.fragment_container, fragment)
                     .commit()
                 true
@@ -172,8 +171,8 @@ class MainActivity : AppCompatActivity() {
         closePlayer()
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(
-                android.R.anim.fade_in, android.R.anim.fade_out,
-                android.R.anim.fade_in, android.R.anim.fade_out
+                R.anim.screen_enter, R.anim.screen_exit,
+                R.anim.screen_pop_enter, R.anim.screen_pop_exit
             )
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
@@ -196,6 +195,31 @@ class MainActivity : AppCompatActivity() {
     fun closePlayer() {
         if (isPlayerOpen && !supportFragmentManager.isStateSaved) {
             supportFragmentManager.popBackStack(PlayerFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
+    }
+
+    // ========== Window insets / floating chrome ==========
+
+    /** Height of the floating mini player + navigation bar; screens pad their content by it. */
+    val bottomChromeHeight = MutableStateFlow(0)
+
+    private fun setupWindowInsets() {
+        val chromeGap = resources.getDimensionPixelSize(R.dimen.space_md)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            binding.fragmentContainer.updatePadding(left = bars.left, top = bars.top, right = bars.right)
+            binding.bottomChrome.updatePadding(
+                left = bars.left + chromeGap,
+                right = bars.right + chromeGap,
+                bottom = bars.bottom + chromeGap
+            )
+            insets
+        }
+        // The navigation bar floats inside a card, so it must not pad itself for the system bar
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigation) { _, insets -> insets }
+
+        binding.bottomChrome.addOnLayoutChangeListener { view, _, top, _, bottom, _, _, _, _ ->
+            bottomChromeHeight.value = if (view.isVisible) bottom - top else 0
         }
     }
 

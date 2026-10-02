@@ -2,14 +2,12 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MusicPlayer.Card.Floating"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    app:cardBackgroundColor="@color/surface_color"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="8dp"
-    app:strokeWidth="0dp">
+    android:stateListAnimator="@animator/press_scale">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,8 +15,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/miniPlayerAlbumArt"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
@@ -35,12 +33,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.MusicPlayer.RowTitle"
+            android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/miniPlayerArtist"
             app:layout_constraintEnd_toStartOf="@+id/miniPlayerPlayPause"
             app:layout_constraintStart_toEndOf="@+id/miniPlayerAlbumArt"
@@ -52,30 +49,38 @@
             android:id="@+id/miniPlayerArtist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/text_secondary"
-            android:textSize="13sp"
+            android:textAppearance="@style/TextAppearance.MusicPlayer.RowSubtitle"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/miniPlayerAlbumArt"
             app:layout_constraintEnd_toEndOf="@+id/miniPlayerTitle"
             app:layout_constraintStart_toStartOf="@+id/miniPlayerTitle"
             app:layout_constraintTop_toBottomOf="@+id/miniPlayerTitle"
             tools:text="Artist" />
 
+        <!-- Accent disc play button -->
         <ImageButton
             android:id="@+id/miniPlayerPlayPause"
-            style="@style/Widget.MusicPlayer.IconButton"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="2dp"
+            android:background="@drawable/bg_accent_circle"
             android:contentDescription="@string/play_pause"
+            android:scaleType="center"
             android:src="@drawable/ic_play"
+            android:stateListAnimator="@animator/press_scale"
             app:layout_constraintBottom_toBottomOf="@+id/miniPlayerAlbumArt"
             app:layout_constraintEnd_toStartOf="@+id/miniPlayerNext"
             app:layout_constraintTop_toTopOf="@+id/miniPlayerAlbumArt"
-            app:tint="@color/accent_color" />
+            app:tint="@color/on_accent_color" />
 
         <ImageButton
             android:id="@+id/miniPlayerNext"
             style="@style/Widget.MusicPlayer.IconButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_marginEnd="4dp"
             android:contentDescription="@string/next"
             android:src="@drawable/ic_skip_next"
@@ -88,12 +93,15 @@
             android:id="@+id/miniPlayerProgress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
             android:max="1000"
             app:indicatorColor="@color/accent_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:trackColor="@color/divider_color"
+            app:trackColor="@color/seek_track"
+            app:trackCornerRadius="2dp"
+            app:trackStopIndicatorSize="0dp"
             app:trackThickness="2dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

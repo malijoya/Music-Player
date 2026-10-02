@@ -18,6 +18,7 @@ import com.musp.musicplayer.data.LibraryState
 import com.musp.musicplayer.databinding.FragmentListBinding
 import com.musp.musicplayer.model.Artist
 import com.musp.musicplayer.ui.hide
+import com.musp.musicplayer.ui.padForBottomChrome
 import com.musp.musicplayer.ui.renderLibraryGate
 import com.musp.musicplayer.ui.showEmpty
 import com.musp.musicplayer.viewmodel.LibraryViewModel
@@ -46,6 +47,7 @@ class ArtistsFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = artistAdapter
         }
+        padForBottomChrome(binding.recyclerView, binding.emptyState.root)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

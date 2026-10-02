@@ -2,21 +2,46 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    
-    <!-- Premium Music Player Colors (Light Theme) -->
-    <color name="primary_color">#6200EA</color> <!-- Deep Purple (Keeping brand color) -->
-    <color name="primary_variant">#3700B3</color>
-    <color name="secondary_color">#018786</color> <!-- Teal (Darker for light bg) -->
-    <color name="background_color">#F5F5F5</color> <!-- Light Grey Background -->
-    <color name="surface_color">#FFFFFF</color> <!-- White for cards -->
-    <color name="text_primary">#212121</color> <!-- Dark Grey Text -->
-    <color name="text_secondary">#757575</color> <!-- Medium Grey Text -->
-    <color name="icon_tint">#6200EA</color> <!-- Tint icons with primary color -->
 
-    <!-- Accent readable on the current background (active icons, selected items) -->
-    <color name="accent_color">#6200EA</color>
-    <color name="on_accent_color">#FFFFFF</color>
-    <color name="art_placeholder_bg">#EDE7F6</color>
-    <color name="art_placeholder_fg">#9575CD</color>
-    <color name="divider_color">#1F000000</color>
+    <!-- ===== Design tokens: light ===== -->
+
+    <!-- Canvas -->
+    <color name="background_color">#F5F4FA</color>
+    <color name="bg_glow_primary">#3D7B61FF</color>
+    <color name="bg_glow_secondary">#2943A6FF</color>
+    <color name="bg_glow_tertiary">#1FFF6FB5</color>
+
+    <!-- Surfaces -->
+    <color name="surface_color">#FFFFFFFF</color>
+    <color name="surface_elevated">#FFFFFFFF</color>
+    <color name="glass_fill">#B8FFFFFF</color>
+    <color name="glass_fill_strong">#EBFFFFFF</color>
+    <color name="glass_stroke">#14161130</color>
+    <color name="player_scrim_top">#99F5F4FA</color>
+    <color name="player_scrim_bottom">#F2F5F4FA</color>
+
+    <!-- Text -->
+    <color name="text_primary">#14131F</color>
+    <color name="text_secondary">#5F5E73</color>
+    <color name="text_tertiary">#77768C</color>
+
+    <!-- Brand -->
+    <color name="secondary_color">#0EA5A4</color>
+    <color name="accent_color">#5B45F0</color>
+    <color name="accent_fill">#5B45F0</color>
+    <color name="accent_soft">#1F5B45F0</color>
+    <color name="accent_glow">#665B45F0</color>
+    <color name="on_accent_color">#FFFFFFFF</color>
+    <color name="error_color">#D93B5C</color>
+
+    <!-- Misc -->
+    <color name="art_placeholder_bg">#ECE9FB</color>
+    <color name="art_placeholder_fg">#8E7DF7</color>
+    <color name="divider_color">#14161130</color>
+    <color name="seek_track">#1F14131F</color>
+
+    <!-- Zero-alpha twins used as gradient end stops (same hue, no grey banding) -->
+    <color name="bg_glow_primary_clear">#007B61FF</color>
+    <color name="bg_glow_secondary_clear">#0043A6FF</color>
+    <color name="bg_glow_tertiary_clear">#00FF6FB5</color>
 </resources>

@@ -18,6 +18,8 @@ import com.musp.musicplayer.adapter.MediaRowAdapter
 import com.musp.musicplayer.databinding.FragmentPlaylistBinding
 import com.musp.musicplayer.model.Playlist
 import com.musp.musicplayer.ui.hide
+import com.musp.musicplayer.ui.liftAboveBottomChrome
+import com.musp.musicplayer.ui.padForBottomChrome
 import com.musp.musicplayer.ui.showConfirmDialog
 import com.musp.musicplayer.ui.showEmpty
 import com.musp.musicplayer.ui.showTextInputDialog
@@ -53,6 +55,8 @@ class PlaylistFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = playlistAdapter
         }
+        padForBottomChrome(binding.recyclerView, binding.emptyState.root)
+        liftAboveBottomChrome(binding.fabCreatePlaylist)
 
         binding.fabCreatePlaylist.setOnClickListener {
             showTextInputDialog(R.string.create_playlist, positive = R.string.create) { name ->

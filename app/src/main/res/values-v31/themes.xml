@@ -1,0 +1,14 @@
+<resources>
+    <!-- Android 12+: real frosted-glass blur behind dialogs and sheets (ignored where the device disables it) -->
+    <style name="ThemeOverlay.MusicPlayer.Dialog" parent="Base.ThemeOverlay.MusicPlayer.Dialog">
+        <item name="android:windowBlurBehindEnabled">true</item>
+        <item name="android:windowBlurBehindRadius">28dp</item>
+        <item name="android:backgroundDimAmount">0.35</item>
+    </style>
+
+    <style name="ThemeOverlay.MusicPlayer.BottomSheet" parent="Base.ThemeOverlay.MusicPlayer.BottomSheet">
+        <item name="android:windowBlurBehindEnabled">true</item>
+        <item name="android:windowBlurBehindRadius">28dp</item>
+        <item name="android:backgroundDimAmount">0.3</item>
+    </style>
+</resources>

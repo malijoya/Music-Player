@@ -20,6 +20,7 @@ import com.musp.musicplayer.data.LibraryState
 import com.musp.musicplayer.databinding.FragmentSongCollectionBinding
 import com.musp.musicplayer.model.Song
 import com.musp.musicplayer.ui.hide
+import com.musp.musicplayer.ui.padForBottomChrome
 import com.musp.musicplayer.ui.renderLibraryGate
 import com.musp.musicplayer.ui.showConfirmDialog
 import com.musp.musicplayer.ui.showEmpty
@@ -27,6 +28,7 @@ import com.musp.musicplayer.ui.showSongMenu
 import com.musp.musicplayer.ui.showTextInputDialog
 import com.musp.musicplayer.utils.MusicUtils
 import com.musp.musicplayer.utils.loadArtwork
+import com.musp.musicplayer.utils.loadBlurredArtwork
 import com.musp.musicplayer.viewmodel.LibraryViewModel
 import com.musp.musicplayer.viewmodel.PlayerViewModel
 import kotlinx.coroutines.flow.Flow
@@ -78,6 +80,7 @@ class SongCollectionFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = songAdapter
         }
+        padForBottomChrome(binding.recyclerView, binding.emptyState.root)
 
         binding.btnPlay.setOnClickListener {
             playerViewModel.playSongs(songAdapter.currentList, 0, shuffle = false)
@@ -124,7 +127,9 @@ class SongCollectionFragment : Fragment() {
         binding.recyclerView.isVisible = hasSongs
         binding.btnPlay.isEnabled = hasSongs
         binding.btnShuffle.isEnabled = hasSongs
-        binding.ivCover.loadArtwork(songs.firstOrNull()?.albumArt)
+        val coverArt = songs.firstOrNull()?.albumArt
+        binding.ivCover.loadArtwork(coverArt)
+        binding.ivBackdrop.loadBlurredArtwork(coverArt)
 
         val countText = resources.getQuantityString(R.plurals.song_count, songs.size, songs.size)
         val totalDuration = MusicUtils.formatDuration(songs.sumOf { it.duration })

@@ -3,13 +3,16 @@
 
     <!-- Navigation -->
     <string name="nav_home">Home</string>
-    <string name="nav_playlist">Playlist</string>
-    <string name="nav_music">Music</string>
+    <string name="nav_playlist">Playlists</string>
+    <string name="nav_music">Library</string>
     <string name="nav_favourites">Favourites</string>
 
     <!-- Home -->
     <string name="home_title">Your Music</string>
-    <string name="home_subtitle">Enjoy your favorite tracks</string>
+    <string name="home_subtitle">Pick up where you left off.</string>
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
     <string name="search_hint">Search songs, artists, albums</string>
     <string name="shuffle_all">Shuffle all</string>
     <string name="recently_played">Recently played</string>
@@ -84,6 +87,7 @@
     <!-- Playlists -->
     <string name="create_playlist">Create playlist</string>
     <string name="new_playlist">New playlist…</string>
+    <string name="new_playlist_action">New playlist</string>
     <string name="playlist_name">Playlist name</string>
     <string name="rename_playlist">Rename playlist</string>
     <string name="delete_playlist">Delete playlist</string>

@@ -1,35 +1,258 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!-- ================================================================== -->
+    <!-- App theme (colors switch between values/ and values-night/)        -->
+    <!-- ================================================================== -->
+
     <style name="Base.Theme.MusicPlayer" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/accent_color</item>
+        <!-- Color roles -->
+        <item name="colorPrimary">@color/accent_fill</item>
         <item name="colorOnPrimary">@color/on_accent_color</item>
-        <item name="colorSecondary">@color/secondary_color</item>
+        <item name="colorPrimaryContainer">@color/accent_soft</item>
+        <item name="colorOnPrimaryContainer">@color/accent_color</item>
+        <item name="colorSecondary">@color/accent_color</item>
+        <item name="colorSecondaryContainer">@color/accent_soft</item>
+        <item name="colorOnSecondaryContainer">@color/accent_color</item>
+        <item name="colorTertiary">@color/secondary_color</item>
         <item name="android:colorBackground">@color/background_color</item>
         <item name="colorSurface">@color/surface_color</item>
+        <item name="colorSurfaceContainerLowest">@color/surface_color</item>
+        <item name="colorSurfaceContainerLow">@color/surface_color</item>
+        <item name="colorSurfaceContainer">@color/surface_elevated</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_elevated</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_elevated</item>
         <item name="colorOnSurface">@color/text_primary</item>
         <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="colorOutline">@color/text_tertiary</item>
+        <item name="colorOutlineVariant">@color/divider_color</item>
+        <item name="colorError">@color/error_color</item>
         <item name="colorControlNormal">@color/text_primary</item>
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+
+        <!-- Typography: Plus Jakarta Sans everywhere -->
+        <item name="android:fontFamily">@font/app_font</item>
+        <item name="fontFamily">@font/app_font</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.App.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.App.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.App.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.App.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.App.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.App.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.App.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.App.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.App.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.App.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.App.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.App.LabelSmall</item>
+        <item name="textAppearanceLargePopupMenu">@style/TextAppearance.App.BodyLarge</item>
+        <item name="textAppearanceSmallPopupMenu">@style/TextAppearance.App.BodyLarge</item>
+
+        <!-- Shape scale -->
+        <item name="shapeAppearanceCornerExtraSmall">@style/ShapeAppearance.MusicPlayer.ExtraSmall</item>
+        <item name="shapeAppearanceCornerSmall">@style/ShapeAppearance.MusicPlayer.Small</item>
+        <item name="shapeAppearanceCornerMedium">@style/ShapeAppearance.MusicPlayer.Medium</item>
+        <item name="shapeAppearanceCornerLarge">@style/ShapeAppearance.MusicPlayer.Large</item>
+        <item name="shapeAppearanceCornerExtraLarge">@style/ShapeAppearance.MusicPlayer.ExtraLarge</item>
+
+        <!-- Components -->
+        <item name="materialButtonStyle">@style/Widget.MusicPlayer.Button</item>
+        <item name="borderlessButtonStyle">@style/Widget.MusicPlayer.Button.Text</item>
+        <item name="textInputStyle">@style/Widget.MusicPlayer.TextInput</item>
+        <item name="popupMenuStyle">@style/Widget.MusicPlayer.PopupMenu</item>
+        <item name="listPopupWindowStyle">@style/Widget.MusicPlayer.ListPopupWindow</item>
+        <item name="snackbarStyle">@style/Widget.MusicPlayer.Snackbar</item>
+        <item name="circularProgressIndicatorStyle">@style/Widget.MusicPlayer.CircularProgress</item>
+        <item name="toolbarStyle">@style/Widget.MusicPlayer.Toolbar</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MusicPlayer.Dialog</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.MusicPlayer.BottomSheet</item>
     </style>
 
     <style name="Theme.MusicPlayer" parent="Base.Theme.MusicPlayer" />
 
-    <style name="ThemeOverlay.MusicPlayer.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/Widget.MusicPlayer.BottomSheet</item>
+    <!-- ================================================================== -->
+    <!-- Typography                                                          -->
+    <!-- ================================================================== -->
+
+    <!-- Theme-level roles (colorless so Material components can tint them) -->
+    <style name="TextAppearance.App.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="fontFamily">@font/jakarta_800</item>
+        <item name="android:fontFamily">@font/jakarta_800</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+    <style name="TextAppearance.App.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/jakarta_700</item>
+        <item name="android:fontFamily">@font/jakarta_700</item>
+        <item name="android:letterSpacing">-0.015</item>
+    </style>
+    <style name="TextAppearance.App.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/jakarta_700</item>
+        <item name="android:fontFamily">@font/jakarta_700</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+    <style name="TextAppearance.App.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/jakarta_700</item>
+        <item name="android:fontFamily">@font/jakarta_700</item>
+    </style>
+    <style name="TextAppearance.App.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/jakarta_600</item>
+        <item name="android:fontFamily">@font/jakarta_600</item>
+    </style>
+    <style name="TextAppearance.App.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/jakarta_600</item>
+        <item name="android:fontFamily">@font/jakarta_600</item>
+    </style>
+    <style name="TextAppearance.App.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/jakarta_500</item>
+        <item name="android:fontFamily">@font/jakarta_500</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+    <style name="TextAppearance.App.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/jakarta_400</item>
+        <item name="android:fontFamily">@font/jakarta_400</item>
+    </style>
+    <style name="TextAppearance.App.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/jakarta_400</item>
+        <item name="android:fontFamily">@font/jakarta_400</item>
+    </style>
+    <style name="TextAppearance.App.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/jakarta_600</item>
+        <item name="android:fontFamily">@font/jakarta_600</item>
+        <item name="android:letterSpacing">0.005</item>
+    </style>
+    <style name="TextAppearance.App.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/jakarta_600</item>
+        <item name="android:fontFamily">@font/jakarta_600</item>
+    </style>
+    <style name="TextAppearance.App.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/jakarta_600</item>
+        <item name="android:fontFamily">@font/jakarta_600</item>
     </style>
 
-    <style name="Widget.MusicPlayer.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
-        <item name="backgroundTint">@color/surface_color</item>
+    <!-- Layout-level styles (carry their own color) -->
+    <style name="TextAppearance.MusicPlayer.Display" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="fontFamily">@font/jakarta_800</item>
+        <item name="android:fontFamily">@font/jakarta_800</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:letterSpacing">-0.025</item>
+        <item name="android:textColor">@color/text_primary</item>
     </style>
 
-    <style name="ShapeAppearance.MusicPlayer.Art" parent="">
+    <style name="TextAppearance.MusicPlayer.Headline" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/jakarta_800</item>
+        <item name="android:fontFamily">@font/jakarta_800</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.MusicPlayer.PlayerTitle" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/jakarta_700</item>
+        <item name="android:fontFamily">@font/jakarta_700</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:letterSpacing">-0.015</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.MusicPlayer.SectionTitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/jakarta_700</item>
+        <item name="android:fontFamily">@font/jakarta_700</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.MusicPlayer.RowTitle" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/jakarta_600</item>
+        <item name="android:fontFamily">@font/jakarta_600</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="TextAppearance.MusicPlayer.RowSubtitle" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/jakarta_400</item>
+        <item name="android:fontFamily">@font/jakarta_400</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="TextAppearance.MusicPlayer.Body" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/jakarta_400</item>
+        <item name="android:fontFamily">@font/jakarta_400</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">3sp</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="TextAppearance.MusicPlayer.Caption" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/jakarta_500</item>
+        <item name="android:fontFamily">@font/jakarta_500</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textColor">@color/text_tertiary</item>
+    </style>
+
+    <style name="TextAppearance.MusicPlayer.Overline" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/jakarta_700</item>
+        <item name="android:fontFamily">@font/jakarta_700</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:letterSpacing">0.14</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/text_tertiary</item>
+    </style>
+
+    <style name="TextAppearance.MusicPlayer.Tab" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/jakarta_600</item>
+        <item name="android:fontFamily">@font/jakarta_600</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.MusicPlayer.NavLabel" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/jakarta_600</item>
+        <item name="android:fontFamily">@font/jakarta_600</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <!-- ================================================================== -->
+    <!-- Shapes                                                              -->
+    <!-- ================================================================== -->
+
+    <style name="ShapeAppearance.MusicPlayer.ExtraSmall" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
     </style>
+    <style name="ShapeAppearance.MusicPlayer.Small" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+    <style name="ShapeAppearance.MusicPlayer.Medium" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+    <style name="ShapeAppearance.MusicPlayer.Large" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+    <style name="ShapeAppearance.MusicPlayer.ExtraLarge" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">28dp</item>
+    </style>
 
+    <!-- Song / row artwork -->
+    <style name="ShapeAppearance.MusicPlayer.Art" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/art_corner_small</item>
+    </style>
+
+    <!-- Album tiles and detail covers -->
     <style name="ShapeAppearance.MusicPlayer.ArtLarge" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">24dp</item>
+        <item name="cornerSize">20dp</item>
     </style>
 
     <style name="ShapeAppearance.MusicPlayer.Circle" parent="">
@@ -37,6 +260,69 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="ShapeAppearance.MusicPlayer.SheetTop" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">28dp</item>
+        <item name="cornerSizeTopRight">28dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <!-- ================================================================== -->
+    <!-- Buttons                                                             -->
+    <!-- ================================================================== -->
+
+    <!-- Primary: filled accent pill -->
+    <style name="Widget.MusicPlayer.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingStart">22dp</item>
+        <item name="android:paddingEnd">22dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.LabelLarge</item>
+        <item name="android:textColor">@color/on_accent_color</item>
+        <item name="backgroundTint">@color/button_fill</item>
+        <item name="iconTint">@color/on_accent_color</item>
+        <item name="iconSize">20dp</item>
+        <item name="iconPadding">8dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.Circle</item>
+        <item name="android:stateListAnimator">@animator/press_scale</item>
+    </style>
+
+    <!-- Secondary: soft accent pill -->
+    <style name="Widget.MusicPlayer.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.LabelLarge</item>
+        <item name="android:textColor">@color/button_on_tonal</item>
+        <item name="backgroundTint">@color/button_tonal</item>
+        <item name="iconTint">@color/button_on_tonal</item>
+        <item name="iconSize">20dp</item>
+        <item name="iconPadding">8dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.Circle</item>
+        <item name="android:stateListAnimator">@animator/press_scale</item>
+    </style>
+
+    <!-- Compact tonal pill for toolbars and list headers -->
+    <style name="Widget.MusicPlayer.Button.Tonal.Small">
+        <item name="android:minHeight">40dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="iconSize">18dp</item>
+        <item name="iconPadding">6dp</item>
+    </style>
+
+    <!-- Tertiary: text only -->
+    <style name="Widget.MusicPlayer.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textAppearance">@style/TextAppearance.App.LabelLarge</item>
+        <item name="android:textColor">@color/accent_color</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.Circle</item>
+    </style>
+
+    <!-- Plain icon button -->
     <style name="Widget.MusicPlayer.IconButton" parent="">
         <item name="android:layout_width">48dp</item>
         <item name="android:layout_height">48dp</item>
@@ -45,8 +331,164 @@
         <item name="tint">@color/text_primary</item>
     </style>
 
-    <style name="TextAppearance.MusicPlayer.SectionTitle" parent="TextAppearance.Material3.TitleMedium">
+    <!-- Circular glass icon button (top bars) -->
+    <style name="Widget.MusicPlayer.IconButton.Glass">
+        <item name="android:layout_width">@dimen/icon_button_size</item>
+        <item name="android:layout_height">@dimen/icon_button_size</item>
+        <item name="android:background">@drawable/bg_glass_circle</item>
+        <item name="android:stateListAnimator">@animator/press_scale</item>
+    </style>
+
+    <!-- ================================================================== -->
+    <!-- Cards & containers                                                  -->
+    <!-- ================================================================== -->
+
+    <!-- Floating chrome (bottom nav, mini player): near-opaque glass -->
+    <style name="Widget.MusicPlayer.Card.Floating" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/glass_fill_strong</item>
+        <item name="cardElevation">10dp</item>
+        <item name="strokeColor">@color/glass_stroke</item>
+        <item name="strokeWidth">@dimen/glass_stroke_width</item>
+        <item name="cardCornerRadius">@dimen/radius_lg</item>
+        <item name="android:outlineAmbientShadowColor" tools:targetApi="p">#33000000</item>
+        <item name="android:outlineSpotShadowColor" tools:targetApi="p">#40000000</item>
+    </style>
+
+    <!-- Bottom navigation -->
+    <style name="Widget.MusicPlayer.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="elevation">0dp</item>
+        <item name="itemIconTint">@color/bottom_nav_item_color</item>
+        <item name="itemTextColor">@color/bottom_nav_item_color</item>
+        <item name="itemTextAppearanceActive">@style/TextAppearance.MusicPlayer.NavLabel</item>
+        <item name="itemTextAppearanceInactive">@style/TextAppearance.MusicPlayer.NavLabel</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.MusicPlayer.NavIndicator</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="itemPaddingTop">10dp</item>
+        <item name="itemPaddingBottom">10dp</item>
+    </style>
+
+    <style name="Widget.MusicPlayer.NavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/accent_soft</item>
+        <item name="android:width">60dp</item>
+        <item name="android:height">30dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.Circle</item>
+    </style>
+
+    <!-- Segmented (pill) tabs -->
+    <style name="Widget.MusicPlayer.Tabs" parent="Widget.Material3.TabLayout">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="tabIndicator">@drawable/bg_tab_indicator</item>
+        <item name="tabIndicatorColor">@color/accent_soft</item>
+        <item name="tabIndicatorGravity">stretch</item>
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabIndicatorAnimationMode">elastic</item>
+        <item name="tabTextAppearance">@style/TextAppearance.MusicPlayer.Tab</item>
+        <item name="tabTextColor">@color/tab_text_color</item>
+        <item name="tabRippleColor">@android:color/transparent</item>
+        <item name="tabMode">fixed</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMinWidth">0dp</item>
+        <item name="tabPaddingStart">8dp</item>
+        <item name="tabPaddingEnd">8dp</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="Widget.MusicPlayer.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="titleTextAppearance">@style/TextAppearance.App.TitleLarge</item>
+        <item name="navigationIconTint">@color/text_primary</item>
+    </style>
+
+    <!-- Text field -->
+    <style name="Widget.MusicPlayer.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/radius_md</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_md</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_md</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_md</item>
+        <item name="boxStrokeColor">@color/accent_fill</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintTextColor">@color/accent_color</item>
+    </style>
+
+    <!-- Menus -->
+    <style name="Widget.MusicPlayer.PopupMenu" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@drawable/bg_popup</item>
+        <item name="android:popupElevation">12dp</item>
+    </style>
+
+    <style name="Widget.MusicPlayer.ListPopupWindow" parent="Widget.Material3.PopupMenu.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/bg_popup</item>
+        <item name="android:popupElevation">12dp</item>
+    </style>
+
+    <!-- Snackbar -->
+    <style name="Widget.MusicPlayer.Snackbar" parent="Widget.Material3.Snackbar">
+        <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.Medium</item>
+    </style>
+
+    <!-- Loading -->
+    <style name="Widget.MusicPlayer.CircularProgress" parent="Widget.Material3.CircularProgressIndicator">
+        <item name="indicatorColor">@color/accent_color</item>
+        <item name="trackColor">@color/accent_soft</item>
+        <item name="trackCornerRadius">4dp</item>
+        <item name="trackThickness">4dp</item>
+        <item name="indicatorSize">40dp</item>
+    </style>
+
+    <!-- Seek bar on the Now Playing screen -->
+    <style name="Widget.MusicPlayer.SeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressDrawable">@drawable/seek_progress</item>
+        <item name="android:thumb">@drawable/seek_thumb</item>
+        <item name="android:minHeight">4dp</item>
+        <item name="android:maxHeight">4dp</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+    </style>
+
+    <!-- ================================================================== -->
+    <!-- Dialogs & sheets (values-v31 adds a real background blur)          -->
+    <!-- ================================================================== -->
+
+    <style name="Base.ThemeOverlay.MusicPlayer.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.MusicPlayer</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.MusicPlayer.Title</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.MusicPlayer.Button.Text</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.MusicPlayer.Button.Text.Muted</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.MusicPlayer.Button.Text</item>
+        <item name="android:backgroundDimAmount">0.55</item>
+    </style>
+
+    <style name="ThemeOverlay.MusicPlayer.Dialog" parent="Base.ThemeOverlay.MusicPlayer.Dialog" />
+
+    <style name="MaterialAlertDialog.MusicPlayer" parent="MaterialAlertDialog.Material3">
+        <item name="backgroundTint">@color/surface_elevated</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.ExtraLarge</item>
+    </style>
+
+    <style name="MaterialAlertDialog.MusicPlayer.Title" parent="MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:textAppearance">@style/TextAppearance.App.HeadlineSmall</item>
         <item name="android:textColor">@color/text_primary</item>
-        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.MusicPlayer.Button.Text.Muted">
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="Base.ThemeOverlay.MusicPlayer.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.MusicPlayer.BottomSheet</item>
+        <item name="android:backgroundDimAmount">0.5</item>
+    </style>
+
+    <style name="ThemeOverlay.MusicPlayer.BottomSheet" parent="Base.ThemeOverlay.MusicPlayer.BottomSheet" />
+
+    <style name="Widget.MusicPlayer.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">@color/surface_elevated</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.SheetTop</item>
     </style>
 </resources>

@@ -5,12 +5,16 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="20dp"
+        android:paddingStart="@dimen/screen_gutter"
         android:paddingEnd="8dp">
 
         <LinearLayout
@@ -23,22 +27,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/queue"
-                android:textColor="@color/text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.MusicPlayer.Headline"
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/tvQueueInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"
+                android:layout_marginTop="2dp"
+                android:textAppearance="@style/TextAppearance.MusicPlayer.RowSubtitle"
                 tools:text="24 songs" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnClearQueue"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.MusicPlayer.Button.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/clear_queue" />
@@ -50,16 +53,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:clipToPadding="false"
-        android:paddingBottom="16dp" />
+        android:paddingHorizontal="@dimen/space_sm"
+        android:paddingBottom="24dp" />
 
     <TextView
         android:id="@+id/tvEmpty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="32dp"
+        android:paddingHorizontal="32dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="48dp"
         android:text="@string/queue_empty"
-        android:textColor="@color/text_secondary"
+        android:textAppearance="@style/TextAppearance.MusicPlayer.Body"
         android:visibility="gone" />
 
 </LinearLayout>

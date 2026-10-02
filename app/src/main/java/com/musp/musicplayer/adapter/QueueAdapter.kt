@@ -82,6 +82,7 @@ class QueueAdapter(
             tvArtist.text = item.song.artist
             ivArt.loadArtwork(item.song.albumArt)
             ivPlaying.isVisible = item.isCurrent
+            root.isActivated = item.isCurrent
             ivDrag.alpha = if (dragEnabled) 1f else 0.3f
             tvTitle.setTextColor(
                 ContextCompat.getColor(context, if (item.isCurrent) R.color.accent_color else R.color.text_primary)

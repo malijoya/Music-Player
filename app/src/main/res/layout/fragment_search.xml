@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
     android:clickable="true"
     android:focusable="true">
 
@@ -11,24 +10,26 @@
         android:id="@+id/searchRow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="4dp"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="@dimen/screen_gutter"
+        android:paddingBottom="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/btnBack"
-            style="@style/Widget.MusicPlayer.IconButton"
-            android:contentDescription="@string/cancel"
+            style="@style/Widget.MusicPlayer.IconButton.Glass"
+            android:contentDescription="@string/back"
             android:src="@drawable/ic_arrow_back" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:background="@drawable/bg_search_pill"
             android:gravity="center_vertical"
@@ -36,19 +37,29 @@
             android:paddingStart="16dp"
             android:paddingEnd="4dp">
 
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_search"
+                app:tint="@color/text_tertiary" />
+
             <EditText
                 android:id="@+id/etSearch"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:fontFamily="@font/jakarta_500"
                 android:hint="@string/search_hint"
                 android:imeOptions="actionSearch"
                 android:importantForAutofill="no"
                 android:inputType="text"
                 android:maxLines="1"
                 android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_secondary"
+                android:textColorHint="@color/text_tertiary"
+                android:textCursorDrawable="@null"
                 android:textSize="15sp" />
 
             <ImageButton
@@ -67,9 +78,9 @@
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         android:clipToPadding="false"
-        android:paddingBottom="8dp"
+        android:paddingHorizontal="@dimen/space_sm"
+        android:paddingBottom="@dimen/space_lg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +90,7 @@
         android:id="@+id/emptyState"
         layout="@layout/view_empty_state"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

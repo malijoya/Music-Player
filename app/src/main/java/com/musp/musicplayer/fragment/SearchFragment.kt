@@ -25,6 +25,7 @@ import com.musp.musicplayer.adapter.SongAdapter
 import com.musp.musicplayer.data.LibraryState
 import com.musp.musicplayer.databinding.FragmentSearchBinding
 import com.musp.musicplayer.ui.hide
+import com.musp.musicplayer.ui.padForBottomChrome
 import com.musp.musicplayer.ui.renderLibraryGate
 import com.musp.musicplayer.ui.show
 import com.musp.musicplayer.ui.showEmpty
@@ -81,6 +82,7 @@ class SearchFragment : Fragment() {
                 }
             })
         }
+        padForBottomChrome(binding.recyclerView, binding.emptyState.root)
 
         binding.btnBack.setOnClickListener {
             hideKeyboard()

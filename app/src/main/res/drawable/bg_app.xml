@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- App canvas: solid base with three soft, low-contrast light glows -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:dither="true">
+    <item>
+        <color android:color="@color/background_color" />
+    </item>
+    <item>
+        <shape android:dither="true">
+            <gradient
+                android:centerX="0.05"
+                android:centerY="0.0"
+                android:endColor="@color/bg_glow_primary_clear"
+                android:gradientRadius="85%"
+                android:startColor="@color/bg_glow_primary"
+                android:type="radial" />
+        </shape>
+    </item>
+    <item>
+        <shape android:dither="true">
+            <gradient
+                android:centerX="1.0"
+                android:centerY="0.38"
+                android:endColor="@color/bg_glow_secondary_clear"
+                android:gradientRadius="70%"
+                android:startColor="@color/bg_glow_secondary"
+                android:type="radial" />
+        </shape>
+    </item>
+    <item>
+        <shape android:dither="true">
+            <gradient
+                android:centerX="0.15"
+                android:centerY="1.0"
+                android:endColor="@color/bg_glow_tertiary_clear"
+                android:gradientRadius="75%"
+                android:startColor="@color/bg_glow_tertiary"
+                android:type="radial" />
+        </shape>
+    </item>
+</layer-list>

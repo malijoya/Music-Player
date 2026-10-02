@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -24,6 +25,7 @@ import com.musp.musicplayer.ui.showSleepTimerDialog
 import com.musp.musicplayer.ui.showSongMenu
 import com.musp.musicplayer.utils.MusicUtils
 import com.musp.musicplayer.utils.loadArtwork
+import com.musp.musicplayer.utils.loadBlurredArtwork
 import com.musp.musicplayer.viewmodel.LibraryViewModel
 import com.musp.musicplayer.viewmodel.PlaybackUiState
 import com.musp.musicplayer.viewmodel.PlayerViewModel
@@ -53,9 +55,16 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // This screen covers the bottom navigation, so keep controls clear of the system nav bar
+        // Full-screen: keep controls clear of the system bars while the blurred
+        // backdrop bleeds underneath them
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
-            v.updatePadding(bottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom)
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(left = bars.left, top = bars.top, right = bars.right, bottom = bars.bottom)
+            listOf(binding.ivBackdrop, binding.backdropScrim).forEach {
+                it.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    setMargins(-bars.left, -bars.top, -bars.right, -bars.bottom)
+                }
+            }
             insets
         }
 
@@ -139,6 +148,7 @@ class PlayerFragment : Fragment() {
             binding.tvSongTitle.setText(R.string.nothing_playing)
             binding.tvArtist.text = null
             binding.ivAlbumArt.setImageResource(R.drawable.art_placeholder)
+            binding.ivBackdrop.loadBlurredArtwork(null)
             displayedArtSongId = null
         } else {
             binding.tvSongTitle.text = song.title
@@ -152,6 +162,7 @@ class PlayerFragment : Fragment() {
             if (displayedArtSongId != song.id) {
                 displayedArtSongId = song.id
                 binding.ivAlbumArt.loadArtwork(song.albumArt)
+                binding.ivBackdrop.loadBlurredArtwork(song.albumArt)
             }
         }
 

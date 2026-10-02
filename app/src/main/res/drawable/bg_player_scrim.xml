@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Keeps text legible over the blurred artwork backdrop -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:dither="true"
+    android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:centerColor="@color/player_scrim_top"
+        android:endColor="@color/player_scrim_bottom"
+        android:startColor="@color/player_scrim_top" />
+</shape>

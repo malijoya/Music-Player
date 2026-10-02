@@ -17,6 +17,7 @@ import com.musp.musicplayer.data.LibraryState
 import com.musp.musicplayer.databinding.FragmentFavouritesBinding
 import com.musp.musicplayer.model.Song
 import com.musp.musicplayer.ui.hide
+import com.musp.musicplayer.ui.padForBottomChrome
 import com.musp.musicplayer.ui.renderLibraryGate
 import com.musp.musicplayer.ui.showEmpty
 import com.musp.musicplayer.ui.showSongMenu
@@ -54,6 +55,7 @@ class FavouritesFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = songAdapter
         }
+        padForBottomChrome(binding.recyclerView, binding.emptyState.root)
         binding.btnPlay.setOnClickListener {
             playerViewModel.playSongs(songAdapter.currentList, 0, shuffle = false)
         }

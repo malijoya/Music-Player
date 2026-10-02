@@ -18,6 +18,7 @@ import com.musp.musicplayer.data.LibraryState
 import com.musp.musicplayer.databinding.FragmentListBinding
 import com.musp.musicplayer.model.Song
 import com.musp.musicplayer.ui.hide
+import com.musp.musicplayer.ui.padForBottomChrome
 import com.musp.musicplayer.ui.renderLibraryGate
 import com.musp.musicplayer.ui.showEmpty
 import com.musp.musicplayer.ui.showSongMenu
@@ -55,6 +56,7 @@ class SongsFragment : Fragment() {
             adapter = songAdapter
             setHasFixedSize(true)
         }
+        padForBottomChrome(binding.recyclerView, binding.emptyState.root)
 
         binding.btnShuffle.setOnClickListener { playerViewModel.shuffleAll(songAdapter.currentList) }
         binding.btnSort.setOnClickListener { showSortMenu(it) }
