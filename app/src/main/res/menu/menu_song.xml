@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_play_next"
+        android:title="@string/play_next" />
+    <item
+        android:id="@+id/action_add_to_queue"
+        android:title="@string/add_to_queue" />
+    <item
+        android:id="@+id/action_add_to_playlist"
+        android:title="@string/add_to_playlist" />
+    <item
+        android:id="@+id/action_toggle_favorite"
+        android:title="@string/add_to_favorites" />
+    <item
+        android:id="@+id/action_remove_from_playlist"
+        android:title="@string/remove_from_playlist"
+        android:visible="false" />
+    <item
+        android:id="@+id/action_go_to_album"
+        android:title="@string/go_to_album" />
+    <item
+        android:id="@+id/action_go_to_artist"
+        android:title="@string/go_to_artist" />
+    <item
+        android:id="@+id/action_details"
+        android:title="@string/song_details" />
+</menu>

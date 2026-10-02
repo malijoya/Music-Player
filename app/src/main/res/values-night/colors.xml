@@ -12,4 +12,11 @@
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#B3FFFFFF</color> <!-- 70% White -->
     <color name="icon_tint">#FFFFFF</color>
+
+    <!-- Lighter purple so accents stay readable on dark surfaces -->
+    <color name="accent_color">#BB86FC</color>
+    <color name="on_accent_color">#000000</color>
+    <color name="art_placeholder_bg">#2A2438</color>
+    <color name="art_placeholder_fg">#B39DDB</color>
+    <color name="divider_color">#1FFFFFFF</color>
 </resources>

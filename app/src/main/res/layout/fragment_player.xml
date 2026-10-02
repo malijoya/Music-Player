@@ -6,47 +6,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
+    android:clickable="true"
+    android:focusable="true"
     tools:context=".fragment.PlayerFragment">
+
+    <ImageButton
+        android:id="@+id/btnCollapse"
+        style="@style/Widget.MusicPlayer.IconButton"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/close_player"
+        android:src="@drawable/ic_expand_more"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="NOW PLAYING"
-        android:textColor="@color/text_secondary"
         android:letterSpacing="0.1"
+        android:text="@string/now_playing"
+        android:textColor="@color/text_secondary"
         android:textSize="12sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btnCollapse"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/btnCollapse" />
+
+    <ImageButton
+        android:id="@+id/btnMore"
+        style="@style/Widget.MusicPlayer.IconButton"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/more_options"
+        android:src="@drawable/ic_more_vert"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnCollapse" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvAlbumArt"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="48dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        app:cardBackgroundColor="@color/surface_color"
         app:cardCornerRadius="24dp"
         app:cardElevation="10dp"
-        app:cardBackgroundColor="@color/surface_color"
-        app:strokeWidth="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvSongTitle"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHeader">
+        app:layout_constraintTop_toBottomOf="@+id/btnCollapse"
+        app:layout_constraintVertical_bias="0.3"
+        app:strokeWidth="0dp">
 
         <ImageView
             android:id="@+id/ivAlbumArt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="@string/album_art"
             android:scaleType="centerCrop"
-            android:contentDescription="Album Art"
-            android:background="@color/primary_variant"
-            app:tint="@color/icon_tint"
-            android:padding="64dp"
-            android:src="@android:drawable/ic_lock_idle_alarm" />
+            android:src="@drawable/art_placeholder" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -54,104 +75,176 @@
         android:id="@+id/tvSongTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="48dp"
-        android:gravity="center"
-        android:text="Song Title"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
         android:textColor="@color/text_primary"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"
-        android:ellipsize="end"
-        android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tvArtist"
+        app:layout_constraintEnd_toStartOf="@+id/btnFavorite"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cvAlbumArt" />
+        tools:text="Song Title" />
 
     <TextView
         android:id="@+id/tvArtist"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="Artist Name"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/text_secondary"
-        android:textSize="16sp"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar"
         app:layout_constraintEnd_toEndOf="@+id/tvSongTitle"
         app:layout_constraintStart_toStartOf="@+id/tvSongTitle"
-        app:layout_constraintTop_toBottomOf="@+id/tvSongTitle" />
+        tools:text="Artist Name · Album" />
+
+    <ImageButton
+        android:id="@+id/btnFavorite"
+        style="@style/Widget.MusicPlayer.IconButton"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/favorite"
+        android:src="@drawable/ic_favorite_border"
+        app:layout_constraintBottom_toBottomOf="@+id/tvArtist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvSongTitle" />
 
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="32dp"
-        android:progressTint="@color/secondary_color"
-        android:thumbTint="@color/secondary_color"
-        android:progress="30"
+        android:layout_marginHorizontal="12dp"
+        android:paddingVertical="8dp"
+        android:progressTint="@color/accent_color"
+        android:thumbTint="@color/accent_color"
+        app:layout_constraintBottom_toTopOf="@+id/tvCurrentTime"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvArtist" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tvCurrentTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="1:20"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="12dp"
         android:textColor="@color/text_secondary"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@+id/seekBar"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+        app:layout_constraintBottom_toTopOf="@+id/btnPlayPause"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="1:20" />
 
     <TextView
         android:id="@+id/tvTotalTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="4:45"
+        android:layout_marginEnd="24dp"
         android:textColor="@color/text_secondary"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/seekBar"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/tvCurrentTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="4:45" />
+
+    <!-- Playback controls -->
+    <ImageButton
+        android:id="@+id/btnShuffle"
+        style="@style/Widget.MusicPlayer.IconButton"
+        android:contentDescription="@string/shuffle"
+        android:src="@drawable/ic_shuffle"
+        app:layout_constraintBottom_toBottomOf="@+id/btnPlayPause"
+        app:layout_constraintEnd_toStartOf="@+id/btnPrev"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnPlayPause" />
+
+    <ImageButton
+        android:id="@+id/btnPrev"
+        style="@style/Widget.MusicPlayer.IconButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:contentDescription="@string/previous"
+        android:scaleX="1.4"
+        android:scaleY="1.4"
+        android:src="@drawable/ic_skip_previous"
+        app:layout_constraintBottom_toBottomOf="@+id/btnPlayPause"
+        app:layout_constraintEnd_toStartOf="@+id/btnPlayPause"
+        app:layout_constraintStart_toEndOf="@+id/btnShuffle"
+        app:layout_constraintTop_toTopOf="@+id/btnPlayPause" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnPlayPause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:contentDescription="Play/Pause"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/play_pause"
+        android:src="@drawable/ic_play"
         app:backgroundTint="@color/primary_color"
-        app:tint="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCurrentTime"
-        android:src="@android:drawable/ic_media_play" />
+        app:fabCustomSize="72dp"
+        app:maxImageSize="36dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnSleepTimer"
+        app:layout_constraintEnd_toStartOf="@+id/btnNext"
+        app:layout_constraintStart_toEndOf="@+id/btnPrev"
+        app:tint="@color/white" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnPrev"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:text="⏮"
-        android:textSize="32sp"
-        android:textColor="@color/text_primary"
-        app:layout_constraintBottom_toBottomOf="@+id/btnPlayPause"
-        app:layout_constraintEnd_toStartOf="@+id/btnPlayPause"
-        app:layout_constraintTop_toTopOf="@+id/btnPlayPause" />
-
-    <com.google.android.material.button.MaterialButton
+    <ImageButton
         android:id="@+id/btnNext"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="⏭"
-        android:textSize="32sp"
-        android:textColor="@color/text_primary"
+        style="@style/Widget.MusicPlayer.IconButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:contentDescription="@string/next"
+        android:scaleX="1.4"
+        android:scaleY="1.4"
+        android:src="@drawable/ic_skip_next"
         app:layout_constraintBottom_toBottomOf="@+id/btnPlayPause"
+        app:layout_constraintEnd_toStartOf="@+id/btnRepeat"
         app:layout_constraintStart_toEndOf="@+id/btnPlayPause"
         app:layout_constraintTop_toTopOf="@+id/btnPlayPause" />
+
+    <ImageButton
+        android:id="@+id/btnRepeat"
+        style="@style/Widget.MusicPlayer.IconButton"
+        android:contentDescription="@string/repeat"
+        android:src="@drawable/ic_repeat"
+        app:layout_constraintBottom_toBottomOf="@+id/btnPlayPause"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnNext"
+        app:layout_constraintTop_toTopOf="@+id/btnPlayPause" />
+
+    <!-- Bottom row: sleep timer and queue -->
+    <ImageButton
+        android:id="@+id/btnSleepTimer"
+        style="@style/Widget.MusicPlayer.IconButton"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/sleep_timer"
+        android:src="@drawable/ic_timer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvSleepTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/accent_color"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/btnSleepTimer"
+        app:layout_constraintStart_toEndOf="@+id/btnSleepTimer"
+        app:layout_constraintTop_toTopOf="@+id/btnSleepTimer"
+        tools:text="Stops in 12:30"
+        tools:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/btnQueue"
+        style="@style/Widget.MusicPlayer.IconButton"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/queue"
+        android:src="@drawable/ic_queue_music"
+        app:layout_constraintBottom_toBottomOf="@+id/btnSleepTimer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnSleepTimer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

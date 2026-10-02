@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/surface_color"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    app:strokeWidth="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/miniPlayerAlbumArt"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:contentDescription="@string/album_art"
+            android:scaleType="centerCrop"
+            android:src="@drawable/art_placeholder"
+            app:layout_constraintBottom_toTopOf="@+id/miniPlayerProgress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.MusicPlayer.Art" />
+
+        <TextView
+            android:id="@+id/miniPlayerTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/miniPlayerArtist"
+            app:layout_constraintEnd_toStartOf="@+id/miniPlayerPlayPause"
+            app:layout_constraintStart_toEndOf="@+id/miniPlayerAlbumArt"
+            app:layout_constraintTop_toTopOf="@+id/miniPlayerAlbumArt"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Song Title" />
+
+        <TextView
+            android:id="@+id/miniPlayerArtist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/miniPlayerAlbumArt"
+            app:layout_constraintEnd_toEndOf="@+id/miniPlayerTitle"
+            app:layout_constraintStart_toStartOf="@+id/miniPlayerTitle"
+            app:layout_constraintTop_toBottomOf="@+id/miniPlayerTitle"
+            tools:text="Artist" />
+
+        <ImageButton
+            android:id="@+id/miniPlayerPlayPause"
+            style="@style/Widget.MusicPlayer.IconButton"
+            android:contentDescription="@string/play_pause"
+            android:src="@drawable/ic_play"
+            app:layout_constraintBottom_toBottomOf="@+id/miniPlayerAlbumArt"
+            app:layout_constraintEnd_toStartOf="@+id/miniPlayerNext"
+            app:layout_constraintTop_toTopOf="@+id/miniPlayerAlbumArt"
+            app:tint="@color/accent_color" />
+
+        <ImageButton
+            android:id="@+id/miniPlayerNext"
+            style="@style/Widget.MusicPlayer.IconButton"
+            android:layout_marginEnd="4dp"
+            android:contentDescription="@string/next"
+            android:src="@drawable/ic_skip_next"
+            app:layout_constraintBottom_toBottomOf="@+id/miniPlayerAlbumArt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/miniPlayerAlbumArt"
+            app:tint="@color/text_primary" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/miniPlayerProgress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:max="1000"
+            app:indicatorColor="@color/accent_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:trackColor="@color/divider_color"
+            app:trackThickness="2dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

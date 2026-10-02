@@ -8,27 +8,27 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.core.content.ContextCompat
+import com.musp.musicplayer.model.Album
+import com.musp.musicplayer.model.Artist
 import com.musp.musicplayer.model.Song
+import java.io.File
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 // # Helper functions (fetch songs, formatting duration)
 object MusicUtils {
 
+    private const val UNKNOWN_ARTIST = "Unknown Artist"
+    private const val UNKNOWN_ALBUM = "Unknown Album"
+
     /**
      * Check if the app has permission to read audio files
      */
     fun hasAudioPermission(context: Context): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_MEDIA_AUDIO
-            ) == PackageManager.PERMISSION_GRANTED
-        } else {
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        }
+        return ContextCompat.checkSelfPermission(
+            context,
+            getAudioPermission()
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     /**
@@ -43,8 +43,21 @@ object MusicUtils {
     }
 
     /**
-     * Scan and retrieve all audio files from device storage
+     * The MediaStore collection holding audio files on all external volumes (including SD cards).
      */
+    fun audioCollectionUri(): Uri {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+        } else {
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        }
+    }
+
+    /**
+     * Scan and retrieve all audio files from device storage.
+     * Must be called off the main thread.
+     */
+    @Suppress("DEPRECATION") // DATA is only used for display and the stale-entry check
     fun getAllSongsFromDevice(context: Context): List<Song> {
         val songs = mutableListOf<Song>()
 
@@ -55,54 +68,90 @@ object MusicUtils {
         val projection = arrayOf(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.DISPLAY_NAME,
             MediaStore.Audio.Media.ARTIST,
+            MediaStore.Audio.Media.ALBUM,
             MediaStore.Audio.Media.DATA,
             MediaStore.Audio.Media.DURATION,
-            MediaStore.Audio.Media.ALBUM_ID
+            MediaStore.Audio.Media.ALBUM_ID,
+            MediaStore.Audio.Media.SIZE,
+            MediaStore.Audio.Media.MIME_TYPE,
+            MediaStore.Audio.Media.YEAR,
+            MediaStore.Audio.Media.TRACK,
+            MediaStore.Audio.Media.DATE_ADDED
         )
 
         val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
-        val sortOrder = "${MediaStore.Audio.Media.TITLE} ASC"
+        val sortOrder = "${MediaStore.Audio.Media.TITLE} COLLATE NOCASE ASC"
+        // Checking file existence is only reliable where direct path access works for media files
+        val canCheckFiles = Build.VERSION.SDK_INT != Build.VERSION_CODES.Q
 
-        context.contentResolver.query(
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-            projection,
-            selection,
-            null,
-            sortOrder
-        )?.use { cursor ->
-            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-            val titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
-            val artistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
-            val dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
-            val durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-            val albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+        try {
+            context.contentResolver.query(
+                audioCollectionUri(),
+                projection,
+                selection,
+                null,
+                sortOrder
+            )?.use { cursor ->
+                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+                val titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+                val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)
+                val artistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+                val albumColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
+                val dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+                val durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+                val albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+                val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
+                val mimeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.MIME_TYPE)
+                val yearColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR)
+                val trackColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK)
+                val dateAddedColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
 
-            while (cursor.moveToNext()) {
-                val id = cursor.getLong(idColumn)
-                val title = cursor.getString(titleColumn) ?: "Unknown Title"
-                val artist = cursor.getString(artistColumn) ?: "Unknown Artist"
-                val data = cursor.getString(dataColumn)
-                val duration = cursor.getLong(durationColumn)
-                val albumId = cursor.getLong(albumIdColumn)
+                while (cursor.moveToNext()) {
+                    val id = cursor.getLong(idColumn)
+                    val path = cursor.getString(dataColumn)
 
-                val albumArtUri = getAlbumArtUri(albumId)
+                    // Skip stale MediaStore rows whose file was deleted
+                    if (canCheckFiles && path != null && !File(path).exists()) continue
 
-                songs.add(
-                    Song(
-                        id = id,
-                        title = title,
-                        artist = artist,
-                        uri = data,
-                        duration = duration,
-                        albumId = albumId,
-                        albumArt = albumArtUri
+                    val title = cursor.getString(titleColumn)?.takeIf { it.isNotBlank() }
+                        ?: cursor.getString(nameColumn)?.substringBeforeLast('.')
+                        ?: "Unknown Title"
+                    val albumId = cursor.getLong(albumIdColumn)
+                    // MediaStore encodes track as disc * 1000 + track
+                    val track = cursor.getInt(trackColumn) % 1000
+
+                    songs.add(
+                        Song(
+                            id = id,
+                            title = title,
+                            artist = cleanTag(cursor.getString(artistColumn), UNKNOWN_ARTIST),
+                            uri = ContentUris.withAppendedId(audioCollectionUri(), id).toString(),
+                            duration = cursor.getLong(durationColumn).coerceAtLeast(0),
+                            albumId = albumId,
+                            albumArt = getAlbumArtUri(albumId),
+                            album = cleanTag(cursor.getString(albumColumn), UNKNOWN_ALBUM),
+                            path = path,
+                            size = cursor.getLong(sizeColumn),
+                            mimeType = cursor.getString(mimeColumn),
+                            year = cursor.getInt(yearColumn),
+                            trackNumber = track,
+                            dateAdded = cursor.getLong(dateAddedColumn)
+                        )
                     )
-                )
+                }
             }
+        } catch (e: SecurityException) {
+            // Permission revoked while scanning
+            return emptyList()
         }
 
         return songs
+    }
+
+    private fun cleanTag(value: String?, fallback: String): String {
+        return if (value.isNullOrBlank() || value == MediaStore.UNKNOWN_STRING) fallback else value
     }
 
     /**
@@ -114,12 +163,57 @@ object MusicUtils {
     }
 
     /**
-     * Format duration from milliseconds to MM:SS format
+     * Group songs into albums
+     */
+    fun groupAlbums(songs: List<Song>): List<Album> {
+        return songs.groupBy { it.albumId }.map { (albumId, albumSongs) ->
+            val first = albumSongs.first()
+            val artists = albumSongs.map { it.artist }.distinct()
+            Album(
+                id = albumId,
+                title = first.album,
+                artist = if (artists.size == 1) artists.first() else "Various Artists",
+                artUri = first.albumArt,
+                songCount = albumSongs.size,
+                year = albumSongs.maxOf { it.year }
+            )
+        }.sortedBy { it.title.lowercase(Locale.getDefault()) }
+    }
+
+    /**
+     * Group songs into artists
+     */
+    fun groupArtists(songs: List<Song>): List<Artist> {
+        return songs.groupBy { it.artist }.map { (name, artistSongs) ->
+            Artist(
+                name = name,
+                songCount = artistSongs.size,
+                albumCount = artistSongs.map { it.albumId }.distinct().size,
+                artUri = artistSongs.first().albumArt
+            )
+        }.sortedBy { it.name.lowercase(Locale.getDefault()) }
+    }
+
+    /**
+     * Sort tracks of an album by track number, then title
+     */
+    fun sortAlbumTracks(songs: List<Song>): List<Song> {
+        return songs.sortedWith(compareBy<Song> { it.trackNumber }.thenBy { it.title.lowercase() })
+    }
+
+    /**
+     * Format duration from milliseconds to MM:SS format (H:MM:SS for long tracks)
      */
     fun formatDuration(durationMillis: Long): String {
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
-        val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis) % 60
-        return String.format("%02d:%02d", minutes, seconds)
+        val safe = durationMillis.coerceAtLeast(0)
+        val hours = TimeUnit.MILLISECONDS.toHours(safe)
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(safe) % 60
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(safe) % 60
+        return if (hours > 0) {
+            String.format(Locale.getDefault(), "%d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+        }
     }
 
     /**
@@ -144,15 +238,23 @@ object MusicUtils {
     }
 
     /**
-     * Search songs by title or artist
+     * Sort songs by date added (newest first)
+     */
+    fun sortByDateAdded(songs: List<Song>): List<Song> {
+        return songs.sortedByDescending { it.dateAdded }
+    }
+
+    /**
+     * Search songs by title, artist or album
      */
     fun searchSongs(songs: List<Song>, query: String): List<Song> {
         if (query.isBlank()) return songs
-        
-        val lowerQuery = query.lowercase()
+
+        val lowerQuery = query.trim().lowercase()
         return songs.filter {
             it.title.lowercase().contains(lowerQuery) ||
-            it.artist.lowercase().contains(lowerQuery)
+            it.artist.lowercase().contains(lowerQuery) ||
+            it.album.lowercase().contains(lowerQuery)
         }
     }
 }

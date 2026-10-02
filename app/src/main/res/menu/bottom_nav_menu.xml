@@ -3,22 +3,22 @@
 
     <item
         android:id="@+id/nav_home"
-        android:icon="@android:drawable/ic_menu_rotate"
-        android:title="Home" />
+        android:icon="@drawable/ic_home"
+        android:title="@string/nav_home" />
 
     <item
         android:id="@+id/nav_playlist"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
-        android:title="Playlist" />
+        android:icon="@drawable/ic_queue_music"
+        android:title="@string/nav_playlist" />
 
     <item
         android:id="@+id/nav_music"
-        android:icon="@android:drawable/ic_media_play"
-        android:title="Music" />
-        
+        android:icon="@drawable/ic_library_music"
+        android:title="@string/nav_music" />
+
     <item
         android:id="@+id/nav_favourites"
-        android:icon="@android:drawable/star_on"
-        android:title="Favourites" />
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/nav_favourites" />
 
 </menu>

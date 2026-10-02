@@ -6,55 +6,57 @@
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    
+
     <!-- Permissions for foreground service and notifications -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    
-    <!-- Permission for handling headphone events -->
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <!-- Keeps the CPU awake while music is playing with the screen off -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 
     <application
+        android:name=".MusicApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MusicPlayer">
+        android:theme="@style/Theme.MusicPlayer"
+        tools:targetApi="31">
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <!-- Music Playback Service -->
+
+        <!-- Music Playback Service (Media3 MediaSessionService).
+             Exported so system UI, lock screen, Bluetooth and wearables can control playback. -->
         <service
             android:name=".service.MusicService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="mediaPlayback" />
-        
-        <!-- Notification Action Receiver -->
-        <receiver
-            android:name=".notification.MusicNotificationReceiver"
-            android:enabled="true"
-            android:exported="false" />
-        
-        <!-- Headphone Disconnect Receiver -->
-        <receiver
-            android:name=".receiver.HeadphoneReceiver"
-            android:enabled="true"
-            android:exported="false">
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
             <intent-filter>
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action android:name="androidx.media3.session.MediaSessionService" />
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+
+        <!-- Handles headset/Bluetooth media buttons and playback resumption after the app was killed -->
+        <receiver
+            android:name="androidx.media3.session.MediaButtonReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
     </application>
