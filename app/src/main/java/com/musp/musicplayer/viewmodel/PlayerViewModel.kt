@@ -205,6 +205,13 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun pause() = withController { it.pause() }
+
+    /** Resumes after [pause]; unlike [playPause] it never toggles playback off. */
+    fun resume() = withController { player ->
+        if (!player.isPlaying && player.mediaItemCount > 0) playPause()
+    }
+
     fun next() = withController { it.seekToNext() }
 
     /** Restarts the song if more than ~3 seconds in, otherwise goes to the previous song. */

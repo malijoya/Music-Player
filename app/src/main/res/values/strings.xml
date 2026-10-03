@@ -101,7 +101,33 @@
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
-    <string name="add">Add</string>
+
+    <!-- Add songs picker -->
+    <string name="add_songs_to">to “%s”</string>
+    <string name="search_songs_hint">Search songs or artists</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect all</string>
+    <string name="select_songs_to_add">Select songs to add</string>
+    <string name="preview_song">Preview %s</string>
+    <string name="stop_preview">Stop preview of %s</string>
+    <string name="all_songs_in_playlist">Every song in your library is already in this playlist</string>
+    <string name="no_songs_match">No songs match “%s”</string>
+    <plurals name="songs_available">
+        <item quantity="one">%d song available</item>
+        <item quantity="other">%d songs available</item>
+    </plurals>
+    <plurals name="songs_selected">
+        <item quantity="one">%d selected</item>
+        <item quantity="other">%d selected</item>
+    </plurals>
+    <plurals name="add_song_count">
+        <item quantity="one">Add %d song</item>
+        <item quantity="other">Add %d songs</item>
+    </plurals>
+    <plurals name="songs_added_to_playlist">
+        <item quantity="one">Added %1$d song to “%2$s”</item>
+        <item quantity="other">Added %1$d songs to “%2$s”</item>
+    </plurals>
     <string name="playlist_name_required">Enter a name</string>
 
     <!-- Player -->

@@ -12,7 +12,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.musp.musicplayer.R
 import com.musp.musicplayer.adapter.SongAdapter
@@ -178,22 +177,10 @@ class SongCollectionFragment : Fragment() {
         }
     }
 
-    /** Multi-select picker of all songs that are not in the playlist yet. */
+    /** Opens the picker of library songs that are not in the playlist yet. */
     private fun showAddSongsDialog() {
-        val inPlaylist = songAdapter.currentList.mapTo(HashSet()) { it.id }
-        val candidates = libraryViewModel.allSongs().filter { it.id !in inPlaylist }
-        if (candidates.isEmpty()) return
-        val labels = candidates.map { "${it.title} — ${it.artist}" }.toTypedArray()
-        val checked = BooleanArray(candidates.size)
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.add_songs)
-            .setMultiChoiceItems(labels, checked) { _, which, isChecked -> checked[which] = isChecked }
-            .setPositiveButton(R.string.add) { _, _ ->
-                val selected = candidates.filterIndexed { index, _ -> checked[index] }
-                if (selected.isNotEmpty()) libraryViewModel.addToPlaylist(collectionId, selected)
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        if (childFragmentManager.isStateSaved || childFragmentManager.findFragmentByTag(AddSongsBottomSheet.TAG) != null) return
+        AddSongsBottomSheet.newInstance(collectionId, name).show(childFragmentManager, AddSongsBottomSheet.TAG)
     }
 
     override fun onDestroyView() {

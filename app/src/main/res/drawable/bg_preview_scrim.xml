@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Darkens artwork under the preview play/pause glyph -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#33FFFFFF">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#59000000" />
+            <corners android:radius="@dimen/art_corner_small" />
+        </shape>
+    </item>
+</ripple>

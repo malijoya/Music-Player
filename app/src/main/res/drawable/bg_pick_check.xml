@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Selection mark of the add-songs picker: accent disc with a check when selected, ring otherwise -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:enterFadeDuration="150"
+    android:exitFadeDuration="150">
+    <item android:state_activated="true">
+        <layer-list>
+            <item>
+                <shape android:shape="oval">
+                    <solid android:color="@color/accent_fill" />
+                </shape>
+            </item>
+            <item
+                android:width="16dp"
+                android:height="16dp"
+                android:gravity="center">
+                <vector
+                    android:width="16dp"
+                    android:height="16dp"
+                    android:viewportWidth="24"
+                    android:viewportHeight="24">
+                    <path
+                        android:fillColor="@color/on_accent_color"
+                        android:pathData="M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41,-1.41z" />
+                </vector>
+            </item>
+        </layer-list>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <stroke
+                android:width="2dp"
+                android:color="@color/text_tertiary" />
+        </shape>
+    </item>
+</selector>

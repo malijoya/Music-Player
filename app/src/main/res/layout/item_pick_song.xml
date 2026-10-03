@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Add-songs picker row: tap the artwork to preview, anywhere else to select -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="4dp"
+    android:background="@drawable/bg_pick_row"
+    android:minHeight="72dp"
+    android:paddingVertical="10dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="16dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivArt"
+        android:layout_width="@dimen/row_art_size"
+        android:layout_height="@dimen/row_art_size"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop"
+        android:src="@drawable/art_placeholder"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.MusicPlayer.Art" />
+
+    <!-- Preview button laid over the artwork (content description is set per song) -->
+    <ImageButton
+        android:id="@+id/btnPreview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_preview_scrim"
+        android:scaleType="center"
+        android:src="@drawable/ic_play"
+        app:layout_constraintBottom_toBottomOf="@+id/ivArt"
+        app:layout_constraintEnd_toEndOf="@+id/ivArt"
+        app:layout_constraintStart_toStartOf="@+id/ivArt"
+        app:layout_constraintTop_toTopOf="@+id/ivArt"
+        app:tint="@color/white"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="12dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MusicPlayer.RowTitle"
+        app:layout_constraintBottom_toTopOf="@+id/tvSubtitle"
+        app:layout_constraintEnd_toStartOf="@+id/ivCheck"
+        app:layout_constraintStart_toEndOf="@+id/ivArt"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Song Title" />
+
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MusicPlayer.RowSubtitle"
+        app:layout_constraintBottom_toTopOf="@+id/previewProgress"
+        app:layout_constraintEnd_toEndOf="@+id/tvTitle"
+        app:layout_constraintStart_toStartOf="@+id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        tools:text="Artist Name · 3:45" />
+
+    <!-- Shown only while this song is being previewed -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/previewProgress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:max="1000"
+        android:visibility="gone"
+        app:indicatorColor="@color/accent_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tvTitle"
+        app:layout_constraintStart_toStartOf="@+id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubtitle"
+        app:trackColor="@color/seek_track"
+        app:trackCornerRadius="2dp"
+        app:trackThickness="3dp"
+        tools:progress="350"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/ivCheck"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:duplicateParentState="true"
+        android:importantForAccessibility="no"
+        android:src="@drawable/bg_pick_check"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
