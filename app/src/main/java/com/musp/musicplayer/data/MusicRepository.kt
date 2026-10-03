@@ -35,14 +35,24 @@ sealed interface LibraryState {
 
 /**
  * Single source of truth for songs on the device (MediaStore).
- * Albums and artists are derived from the scanned songs.
+ * Every audio file is scanned; when "music only" is on, [state] leaves out files that
+ * [com.musp.musicplayer.utils.MusicClassifier] judged not to be music.
+ * Albums and artists are derived from the visible songs.
  */
 class MusicRepository(
     private val context: Context,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
+    private val prefs: PlaybackStateStore
 ) {
     private val _state = MutableStateFlow<LibraryState>(LibraryState.Loading)
     val state: StateFlow<LibraryState> = _state.asStateFlow()
+
+    private val _musicOnly = MutableStateFlow(prefs.musicOnly)
+    val musicOnly: StateFlow<Boolean> = _musicOnly.asStateFlow()
+
+    /** Everything found by the last scan, including files hidden by the music-only filter. */
+    @Volatile
+    private var scannedSongs: List<Song> = emptyList()
 
     val songs: Flow<List<Song>> = state.map { (it as? LibraryState.Ready)?.songs ?: emptyList() }
         .distinctUntilChanged()
@@ -63,20 +73,34 @@ class MusicRepository(
     }
     private var observerRegistered = false
 
+    // Lookups by id include hidden files so a restored queue can still play them
     fun getSong(id: Long): Song? = songMap[id]
 
     fun getSongs(ids: List<Long>): List<Song> = ids.mapNotNull { songMap[it] }
 
+    /** Total number of non-music files found by the last scan. */
+    fun nonMusicCount(): Int = scannedSongs.count { !it.isMusic }
+
+    fun setMusicOnly(musicOnly: Boolean) {
+        if (_musicOnly.value == musicOnly) return
+        prefs.musicOnly = musicOnly
+        _musicOnly.value = musicOnly
+        if (_state.value is LibraryState.Ready) {
+            _state.value = LibraryState.Ready(visible(scannedSongs))
+        }
+    }
+
+    private fun visible(songs: List<Song>): List<Song> =
+        if (_musicOnly.value) songs.filter { it.isMusic } else songs
+
     /** Re-scan the device. Safe to call often; concurrent scans are serialized. */
     suspend fun refresh(): LibraryState = scanMutex.withLock {
-        val newState = withContext(Dispatchers.IO) {
-            if (!MusicUtils.hasAudioPermission(context)) {
-                LibraryState.PermissionRequired
-            } else {
-                LibraryState.Ready(MusicUtils.getAllSongsFromDevice(context))
-            }
+        val scanned = withContext(Dispatchers.IO) {
+            if (MusicUtils.hasAudioPermission(context)) MusicUtils.getAllSongsFromDevice(context) else null
         }
-        songMap = (newState as? LibraryState.Ready)?.songs?.associateBy { it.id } ?: emptyMap()
+        scannedSongs = scanned.orEmpty()
+        songMap = scannedSongs.associateBy { it.id }
+        val newState = if (scanned == null) LibraryState.PermissionRequired else LibraryState.Ready(visible(scanned))
         _state.value = newState
         newState
     }
@@ -102,6 +126,7 @@ class MusicRepository(
         val current = _state.value
         if (!hasPermission && current !is LibraryState.PermissionRequired) {
             songMap = emptyMap()
+            scannedSongs = emptyList()
             _state.value = LibraryState.PermissionRequired
         } else if (hasPermission) {
             requestRefresh()

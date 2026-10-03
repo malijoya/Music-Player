@@ -16,5 +16,6 @@ data class Song(
     val mimeType: String? = null,
     val year: Int = 0,
     val trackNumber: Int = 0,
-    val dateAdded: Long = 0 // seconds since epoch
+    val dateAdded: Long = 0, // seconds since epoch
+    val isMusic: Boolean = true // false for voice notes, recordings, ringtones... (see MusicClassifier)
 )

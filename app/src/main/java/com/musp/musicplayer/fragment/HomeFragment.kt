@@ -71,6 +71,7 @@ class HomeFragment : Fragment() {
         }
         binding.btnClearRecent.setOnClickListener { libraryViewModel.clearRecentlyPlayed() }
         binding.btnTheme.setOnClickListener { showThemeDialog() }
+        binding.btnLibraryFilter.setOnClickListener { showLibraryFilterDialog() }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -129,6 +130,24 @@ class HomeFragment : Fragment() {
                 dialog.dismiss()
                 store.themeMode = modes[which]
                 AppCompatDelegate.setDefaultNightMode(modes[which])
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun showLibraryFilterDialog() {
+        val nonMusic = libraryViewModel.nonMusicCount()
+        val labels = arrayOf(
+            if (nonMusic > 0) getString(R.string.library_music_only_hiding, nonMusic)
+            else getString(R.string.library_music_only),
+            getString(R.string.library_all_audio)
+        )
+        val checked = if (libraryViewModel.musicOnly.value) 0 else 1
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.library_filter)
+            .setSingleChoiceItems(labels, checked) { dialog, which ->
+                dialog.dismiss()
+                libraryViewModel.setMusicOnly(which == 0)
             }
             .setNegativeButton(R.string.cancel, null)
             .show()

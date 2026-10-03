@@ -78,6 +78,14 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
 
     fun refreshLibrary() = musicRepository.requestRefresh()
 
+    /** true when voice notes, recordings and other non-music audio are hidden from the library. */
+    val musicOnly: StateFlow<Boolean> = musicRepository.musicOnly
+
+    fun setMusicOnly(musicOnly: Boolean) = musicRepository.setMusicOnly(musicOnly)
+
+    /** Number of scanned audio files that aren't music (shown or not). */
+    fun nonMusicCount(): Int = musicRepository.nonMusicCount()
+
     fun albumSongs(albumId: Long): Flow<List<Song>> =
         musicRepository.songs.map { songs -> MusicUtils.sortAlbumTracks(songs.filter { it.albumId == albumId }) }
 

@@ -28,9 +28,9 @@ class MusicApp : Application() {
 class AppContainer(context: Context) {
     val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     val database: AppDatabase by lazy { AppDatabase.create(context) }
-    val musicRepository = MusicRepository(context, appScope)
-    val userLibraryRepository by lazy { UserLibraryRepository(database, musicRepository) }
     val playbackStateStore = PlaybackStateStore(context)
+    val musicRepository = MusicRepository(context, appScope, playbackStateStore)
+    val userLibraryRepository by lazy { UserLibraryRepository(database, musicRepository) }
     val sleepTimer = SleepTimer()
 }
 

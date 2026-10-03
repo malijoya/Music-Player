@@ -57,6 +57,11 @@ class PlaybackStateStore(context: Context) {
         get() = prefs.getInt(KEY_SORT, 0)
         set(value) = prefs.edit { putInt(KEY_SORT, value) }
 
+    /** true: the library shows only songs; false: every audio file (voice notes, recordings...) */
+    var musicOnly: Boolean
+        get() = prefs.getBoolean(KEY_MUSIC_ONLY, true)
+        set(value) = prefs.edit { putBoolean(KEY_MUSIC_ONLY, value) }
+
     companion object {
         private const val KEY_QUEUE = "queue_ids"
         private const val KEY_INDEX = "queue_index"
@@ -65,5 +70,6 @@ class PlaybackStateStore(context: Context) {
         private const val KEY_REPEAT = "repeat_mode"
         private const val KEY_THEME = "theme_mode"
         private const val KEY_SORT = "song_sort"
+        private const val KEY_MUSIC_ONLY = "music_only"
     }
 }

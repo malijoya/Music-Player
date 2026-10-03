@@ -53,6 +53,13 @@
                 </LinearLayout>
 
                 <ImageButton
+                    android:id="@+id/btnLibraryFilter"
+                    style="@style/Widget.MusicPlayer.IconButton.Glass"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/library_filter"
+                    android:src="@drawable/ic_filter" />
+
+                <ImageButton
                     android:id="@+id/btnTheme"
                     style="@style/Widget.MusicPlayer.IconButton.Glass"
                     android:contentDescription="@string/theme"

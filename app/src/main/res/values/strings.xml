@@ -21,6 +21,10 @@
     <string name="theme_system">System default</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
+    <string name="library_filter">Show in library</string>
+    <string name="library_music_only">Music only</string>
+    <string name="library_music_only_hiding">Music only (hides %d voice notes, recordings and other non-music files)</string>
+    <string name="library_all_audio">All audio files</string>
 
     <!-- Library -->
     <string name="tab_songs">Songs</string>

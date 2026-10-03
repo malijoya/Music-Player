@@ -54,7 +54,7 @@ object MusicUtils {
     }
 
     /**
-     * Scan and retrieve all audio files from device storage.
+     * Scan and retrieve all audio files from device storage, each marked with whether it is music.
      * Must be called off the main thread.
      */
     @Suppress("DEPRECATION") // DATA is only used for display and the stale-entry check
@@ -65,7 +65,7 @@ object MusicUtils {
             return songs
         }
 
-        val projection = arrayOf(
+        val projection = mutableListOf(
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.DISPLAY_NAME,
@@ -78,10 +78,21 @@ object MusicUtils {
             MediaStore.Audio.Media.MIME_TYPE,
             MediaStore.Audio.Media.YEAR,
             MediaStore.Audio.Media.TRACK,
-            MediaStore.Audio.Media.DATE_ADDED
+            MediaStore.Audio.Media.DATE_ADDED,
+            MediaStore.Audio.Media.IS_MUSIC,
+            MediaStore.Audio.Media.IS_RINGTONE,
+            MediaStore.Audio.Media.IS_NOTIFICATION,
+            MediaStore.Audio.Media.IS_ALARM,
+            MediaStore.Audio.Media.IS_PODCAST
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            projection += MediaStore.Audio.Media.IS_AUDIOBOOK
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            projection += MediaStore.Audio.Media.IS_RECORDING
+        }
 
-        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
+        // No selection: every audio file is scanned and classified, the library filters later
         val sortOrder = "${MediaStore.Audio.Media.TITLE} COLLATE NOCASE ASC"
         // Checking file existence is only reliable where direct path access works for media files
         val canCheckFiles = Build.VERSION.SDK_INT != Build.VERSION_CODES.Q
@@ -89,8 +100,8 @@ object MusicUtils {
         try {
             context.contentResolver.query(
                 audioCollectionUri(),
-                projection,
-                selection,
+                projection.toTypedArray(),
+                null,
                 null,
                 sortOrder
             )?.use { cursor ->
@@ -107,6 +118,14 @@ object MusicUtils {
                 val yearColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR)
                 val trackColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK)
                 val dateAddedColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
+                val isMusicColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_MUSIC)
+                val isRingtoneColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_RINGTONE)
+                val isNotificationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_NOTIFICATION)
+                val isAlarmColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_ALARM)
+                val isPodcastColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_PODCAST)
+                // -1 on Android versions that don't have these columns
+                val isAudiobookColumn = cursor.getColumnIndex(MediaStore.Audio.Media.IS_AUDIOBOOK)
+                val isRecordingColumn = cursor.getColumnIndex(MediaStore.Audio.Media.IS_RECORDING)
 
                 while (cursor.moveToNext()) {
                     val id = cursor.getLong(idColumn)
@@ -115,29 +134,57 @@ object MusicUtils {
                     // Skip stale MediaStore rows whose file was deleted
                     if (canCheckFiles && path != null && !File(path).exists()) continue
 
+                    val displayName = cursor.getString(nameColumn)
                     val title = cursor.getString(titleColumn)?.takeIf { it.isNotBlank() }
-                        ?: cursor.getString(nameColumn)?.substringBeforeLast('.')
+                        ?: displayName?.substringBeforeLast('.')
                         ?: "Unknown Title"
+                    val rawArtist = cursor.getString(artistColumn)
+                    val rawAlbum = cursor.getString(albumColumn)
+                    val duration = cursor.getLong(durationColumn).coerceAtLeast(0)
+                    val mimeType = cursor.getString(mimeColumn)
+                    val year = cursor.getInt(yearColumn)
                     val albumId = cursor.getLong(albumIdColumn)
                     // MediaStore encodes track as disc * 1000 + track
                     val track = cursor.getInt(trackColumn) % 1000
+
+                    val isMusic = MusicClassifier.isMusic(
+                        MusicClassifier.AudioInfo(
+                            path = path,
+                            displayName = displayName,
+                            title = title,
+                            artist = tagOrNull(rawArtist),
+                            album = tagOrNull(rawAlbum),
+                            durationMs = duration,
+                            mimeType = mimeType,
+                            year = year,
+                            trackNumber = track,
+                            isMusicFlag = cursor.getInt(isMusicColumn) != 0,
+                            isRingtone = cursor.getInt(isRingtoneColumn) != 0,
+                            isNotification = cursor.getInt(isNotificationColumn) != 0,
+                            isAlarm = cursor.getInt(isAlarmColumn) != 0,
+                            isPodcast = cursor.getInt(isPodcastColumn) != 0,
+                            isAudiobook = isAudiobookColumn >= 0 && cursor.getInt(isAudiobookColumn) != 0,
+                            isRecording = isRecordingColumn >= 0 && cursor.getInt(isRecordingColumn) != 0
+                        )
+                    )
 
                     songs.add(
                         Song(
                             id = id,
                             title = title,
-                            artist = cleanTag(cursor.getString(artistColumn), UNKNOWN_ARTIST),
+                            artist = cleanTag(rawArtist, UNKNOWN_ARTIST),
                             uri = ContentUris.withAppendedId(audioCollectionUri(), id).toString(),
-                            duration = cursor.getLong(durationColumn).coerceAtLeast(0),
+                            duration = duration,
                             albumId = albumId,
                             albumArt = getAlbumArtUri(albumId),
-                            album = cleanTag(cursor.getString(albumColumn), UNKNOWN_ALBUM),
+                            album = cleanTag(rawAlbum, UNKNOWN_ALBUM),
                             path = path,
                             size = cursor.getLong(sizeColumn),
-                            mimeType = cursor.getString(mimeColumn),
-                            year = cursor.getInt(yearColumn),
+                            mimeType = mimeType,
+                            year = year,
                             trackNumber = track,
-                            dateAdded = cursor.getLong(dateAddedColumn)
+                            dateAdded = cursor.getLong(dateAddedColumn),
+                            isMusic = isMusic
                         )
                     )
                 }
@@ -150,8 +197,10 @@ object MusicUtils {
         return songs
     }
 
-    private fun cleanTag(value: String?, fallback: String): String {
-        return if (value.isNullOrBlank() || value == MediaStore.UNKNOWN_STRING) fallback else value
+    private fun cleanTag(value: String?, fallback: String): String = tagOrNull(value) ?: fallback
+
+    private fun tagOrNull(value: String?): String? {
+        return if (value.isNullOrBlank() || value == MediaStore.UNKNOWN_STRING) null else value
     }
 
     /**
