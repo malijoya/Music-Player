@@ -213,9 +213,15 @@
     </style>
 
     <style name="TextAppearance.MusicPlayer.NavLabel" parent="TextAppearance.Material3.LabelMedium">
-        <item name="fontFamily">@font/jakarta_600</item>
-        <item name="android:fontFamily">@font/jakarta_600</item>
+        <item name="fontFamily">@font/jakarta_500</item>
+        <item name="android:fontFamily">@font/jakarta_500</item>
         <item name="android:textSize">11sp</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <style name="TextAppearance.MusicPlayer.NavLabel.Active">
+        <item name="fontFamily">@font/jakarta_700</item>
+        <item name="android:fontFamily">@font/jakarta_700</item>
     </style>
 
     <!-- ================================================================== -->
@@ -354,25 +360,35 @@
         <item name="android:outlineSpotShadowColor" tools:targetApi="p">#40000000</item>
     </style>
 
+    <!-- Glass navigation bar docked to the bottom edge; extends under the system navigation bar -->
+    <style name="Widget.MusicPlayer.Card.NavBar" parent="Widget.MusicPlayer.Card.Floating">
+        <item name="cardElevation">16dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MusicPlayer.SheetTop</item>
+    </style>
+
     <!-- Bottom navigation -->
     <style name="Widget.MusicPlayer.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
         <item name="android:background">@android:color/transparent</item>
         <item name="backgroundTint">@android:color/transparent</item>
         <item name="elevation">0dp</item>
+        <item name="android:minHeight">68dp</item>
+        <item name="itemIconSize">24dp</item>
         <item name="itemIconTint">@color/bottom_nav_item_color</item>
         <item name="itemTextColor">@color/bottom_nav_item_color</item>
-        <item name="itemTextAppearanceActive">@style/TextAppearance.MusicPlayer.NavLabel</item>
+        <item name="itemTextAppearanceActive">@style/TextAppearance.MusicPlayer.NavLabel.Active</item>
         <item name="itemTextAppearanceInactive">@style/TextAppearance.MusicPlayer.NavLabel</item>
+        <item name="itemTextAppearanceActiveBoldEnabled">false</item>
         <item name="itemActiveIndicatorStyle">@style/Widget.MusicPlayer.NavIndicator</item>
+        <item name="itemRippleColor">@color/accent_soft</item>
         <item name="labelVisibilityMode">labeled</item>
         <item name="itemPaddingTop">10dp</item>
-        <item name="itemPaddingBottom">10dp</item>
+        <item name="itemPaddingBottom">8dp</item>
     </style>
 
     <style name="Widget.MusicPlayer.NavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/accent_soft</item>
-        <item name="android:width">60dp</item>
-        <item name="android:height">30dp</item>
+        <item name="android:width">64dp</item>
+        <item name="android:height">32dp</item>
         <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.Circle</item>
     </style>
 

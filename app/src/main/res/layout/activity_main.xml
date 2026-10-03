@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Floating chrome: mini player stacked on a glass navigation bar -->
+    <!-- Bottom chrome: floating mini player stacked on a glass navigation bar docked to the
+         screen edge. The bar's glass runs underneath the system navigation bar. -->
     <LinearLayout
         android:id="@+id/bottomChrome"
         android:layout_width="match_parent"
@@ -23,7 +24,6 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:paddingHorizontal="12dp"
         android:paddingTop="8dp">
 
         <include
@@ -31,16 +31,16 @@
             layout="@layout/layout_mini_player"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginHorizontal="@dimen/space_md"
+            android:layout_marginBottom="@dimen/space_sm"
             android:visibility="gone"
             tools:visibility="visible" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/navCard"
-            style="@style/Widget.MusicPlayer.Card.Floating"
+            style="@style/Widget.MusicPlayer.Card.NavBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="@dimen/radius_xl">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottom_navigation"

@@ -1,58 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Shared empty / permission / no-results state -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Shared empty / permission / no-results state.
+     A NestedScrollView so drags still reach a collapsing app bar (and small screens
+     can scroll the message) when there is no list to scroll. -->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:paddingHorizontal="40dp"
-    android:paddingVertical="24dp">
+    android:clipToPadding="false"
+    android:fillViewport="true">
 
-    <FrameLayout
-        android:layout_width="88dp"
-        android:layout_height="88dp"
-        android:background="@drawable/bg_icon_badge">
-
-        <ImageView
-            android:id="@+id/emptyIcon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_music_note"
-            app:tint="@color/accent_color" />
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/emptyTitle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:gravity="center"
-        android:textAppearance="@style/TextAppearance.MusicPlayer.SectionTitle"
-        android:textSize="19sp"
-        tools:text="No music found" />
+        android:orientation="vertical"
+        android:paddingHorizontal="40dp"
+        android:paddingVertical="24dp">
 
-    <TextView
-        android:id="@+id/emptyMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:maxWidth="320dp"
-        android:textAppearance="@style/TextAppearance.MusicPlayer.Body"
-        android:textSize="14sp"
-        tools:text="Add audio files to your device and they will appear here." />
+        <FrameLayout
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:background="@drawable/bg_icon_badge">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/emptyAction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:visibility="gone"
-        tools:text="Allow access"
-        tools:visibility="visible" />
+            <ImageView
+                android:id="@+id/emptyIcon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_music_note"
+                app:tint="@color/accent_color" />
+        </FrameLayout>
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/emptyTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.MusicPlayer.SectionTitle"
+            android:textSize="19sp"
+            tools:text="No music found" />
+
+        <TextView
+            android:id="@+id/emptyMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:maxWidth="320dp"
+            android:textAppearance="@style/TextAppearance.MusicPlayer.Body"
+            android:textSize="14sp"
+            tools:text="Add audio files to your device and they will appear here." />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/emptyAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            tools:text="Allow access"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
