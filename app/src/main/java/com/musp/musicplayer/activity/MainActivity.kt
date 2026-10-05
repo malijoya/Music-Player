@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,10 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
@@ -79,7 +75,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root) // Set content view via ViewBinding
 
         setupWindowInsets()
-        setupSystemNavBarAutoHide()
 
         permissionPermanentlyDenied = savedInstanceState?.getBoolean(KEY_PERMISSION_DENIED) ?: false
 
@@ -211,16 +206,10 @@ class MainActivity : AppCompatActivity() {
     /** Height of the mini player + navigation bar; screens pad their content by it. */
     val bottomChromeHeight = MutableStateFlow(0)
 
-    /** Bottom inset of the system navigation bar as if it were shown, even while auto-hidden. */
-    private var stableNavBarBottom = 0
-    private var navBarAnimating = false
-
     private fun setupWindowInsets() {
         val chromeGap = resources.getDimensionPixelSize(R.dimen.space_md)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            // Lay out against the bars as if they were always shown, so auto-hiding the
-            // system navigation bar never reflows the screens
-            val bars = insets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.systemBars())
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             binding.fragmentContainer.updatePadding(left = bars.left, top = bars.top, right = bars.right)
             binding.miniPlayer.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 leftMargin = bars.left + chromeGap
@@ -228,94 +217,17 @@ class MainActivity : AppCompatActivity() {
             }
             // The bar's glass runs under the system navigation bar; only its items are inset
             binding.bottomNavigation.updatePadding(left = bars.left, right = bars.right, bottom = bars.bottom)
-            stableNavBarBottom = insets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.navigationBars()).bottom
-            if (!navBarAnimating) followSystemNavBar(insets)
             insets
         }
         // Padding for the system bar is applied above, not by the navigation view itself
         ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigation) { _, insets -> insets }
 
-        // Slide the chrome in step with the system navigation bar as it hides and reappears
-        ViewCompat.setWindowInsetsAnimationCallback(
-            binding.root,
-            object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_CONTINUE_ON_SUBTREE) {
-                override fun onPrepare(animation: WindowInsetsAnimationCompat) {
-                    if (animation.isNavBarAnimation) navBarAnimating = true
-                }
-
-                override fun onProgress(
-                    insets: WindowInsetsCompat,
-                    runningAnimations: List<WindowInsetsAnimationCompat>
-                ): WindowInsetsCompat {
-                    if (navBarAnimating) followSystemNavBar(insets)
-                    return insets
-                }
-
-                override fun onEnd(animation: WindowInsetsAnimationCompat) {
-                    if (!animation.isNavBarAnimation) return
-                    navBarAnimating = false
-                    ViewCompat.getRootWindowInsets(binding.root)?.let { followSystemNavBar(it) }
-                }
-
-                private val WindowInsetsAnimationCompat.isNavBarAnimation
-                    get() = typeMask and WindowInsetsCompat.Type.navigationBars() != 0
-            }
-        )
+        // The glass navigation bar already gives the system buttons contrast
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) window.isNavigationBarContrastEnforced = false
 
         binding.bottomChrome.addOnLayoutChangeListener { view, _, top, _, bottom, _, _, _, _ ->
             bottomChromeHeight.value = if (view.isVisible) bottom - top else 0
         }
-    }
-
-    /** Drops the chrome into the space the system navigation bar frees up while it is hidden. */
-    private fun followSystemNavBar(insets: WindowInsetsCompat) {
-        val navBarBottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
-        binding.bottomChrome.translationY = (stableNavBarBottom - navBarBottom).coerceAtLeast(0).toFloat()
-    }
-
-    // ========== System navigation bar auto-hide ==========
-
-    private val systemBars by lazy { WindowCompat.getInsetsController(window, window.decorView) }
-    private val hideSystemNavBar = Runnable { systemBars.hide(WindowInsetsCompat.Type.navigationBars()) }
-
-    private fun setupSystemNavBarAutoHide() {
-        // Android 12+: back/home gestures keep working while the bar is hidden.
-        // Older: sticky immersive, so touches still reach the app instead of only revealing the bar.
-        systemBars.systemBarsBehavior = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
-        } else {
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-        // The glass navigation bar already gives the system buttons contrast
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) window.isNavigationBarContrastEnforced = false
-    }
-
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        when (ev.actionMasked) {
-            // Bring the bar back on touch and keep it while the finger is down
-            MotionEvent.ACTION_DOWN -> {
-                binding.root.removeCallbacks(hideSystemNavBar)
-                systemBars.show(WindowInsetsCompat.Type.navigationBars())
-            }
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> scheduleSystemNavBarHide()
-        }
-        return super.dispatchTouchEvent(ev)
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            scheduleSystemNavBarHide()
-        } else {
-            // A dialog, menu or sheet is up (or the app is leaving): keep the bar shown until we're back
-            binding.root.removeCallbacks(hideSystemNavBar)
-            systemBars.show(WindowInsetsCompat.Type.navigationBars())
-        }
-    }
-
-    private fun scheduleSystemNavBarHide() {
-        binding.root.removeCallbacks(hideSystemNavBar)
-        binding.root.postDelayed(hideSystemNavBar, NAV_BAR_AUTO_HIDE_MS)
     }
 
     // ========== Mini Player ==========
@@ -364,6 +276,5 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val ACTION_OPEN_PLAYER = "com.musp.musicplayer.action.OPEN_PLAYER"
         private const val KEY_PERMISSION_DENIED = "permission_denied"
-        private const val NAV_BAR_AUTO_HIDE_MS = 3_000L
     }
 }

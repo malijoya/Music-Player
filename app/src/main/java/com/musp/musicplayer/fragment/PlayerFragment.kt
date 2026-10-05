@@ -56,10 +56,9 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Full-screen: keep controls clear of the system bars while the blurred
-        // backdrop bleeds underneath them. Stable insets: controls don't jump as the
-        // system navigation bar auto-hides.
+        // backdrop bleeds underneath them
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
-            val bars = insets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.systemBars())
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.updatePadding(left = bars.left, top = bars.top, right = bars.right, bottom = bars.bottom)
             listOf(binding.ivBackdrop, binding.backdropScrim).forEach {
                 it.updateLayoutParams<ViewGroup.MarginLayoutParams> {
