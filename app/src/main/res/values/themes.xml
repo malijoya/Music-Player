@@ -328,6 +328,30 @@
         <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.Circle</item>
     </style>
 
+    <!-- Icon-over-label action in the multi-select card -->
+    <style name="Widget.MusicPlayer.Button.Action" parent="Widget.Material3.Button.TextButton">
+        <item name="android:minHeight">60dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MusicPlayer.NavLabel</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/action_content</item>
+        <item name="android:maxLines">1</item>
+        <item name="iconTint">@color/action_content</item>
+        <item name="iconGravity">top</item>
+        <item name="iconPadding">4dp</item>
+        <item name="iconSize">22dp</item>
+        <item name="rippleColor">@color/accent_soft</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.Medium</item>
+    </style>
+
+    <style name="Widget.MusicPlayer.Button.Action.Destructive">
+        <item name="android:textColor">@color/action_destructive</item>
+        <item name="iconTint">@color/action_destructive</item>
+    </style>
+
     <!-- Plain icon button -->
     <style name="Widget.MusicPlayer.IconButton" parent="">
         <item name="android:layout_width">48dp</item>
@@ -390,6 +414,19 @@
         <item name="android:width">64dp</item>
         <item name="android:height">32dp</item>
         <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.Circle</item>
+    </style>
+
+    <!-- Glass filter chip: accent tint and outline when checked -->
+    <style name="Widget.MusicPlayer.Chip.Filter" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/chip_filter_bg</item>
+        <item name="chipStrokeColor">@color/chip_filter_stroke</item>
+        <item name="chipStrokeWidth">@dimen/glass_stroke_width</item>
+        <item name="android:textColor">@color/chip_filter_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.LabelLarge</item>
+        <item name="checkedIconTint">@color/accent_color</item>
+        <item name="chipMinHeight">36dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MusicPlayer.Circle</item>
+        <item name="rippleColor">@color/accent_soft</item>
     </style>
 
     <!-- Segmented (pill) tabs -->

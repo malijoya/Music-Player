@@ -7,6 +7,11 @@
         android:title="@string/add_songs"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_select"
+        android:icon="@drawable/ic_checklist"
+        android:title="@string/select_songs"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_rename"
         android:title="@string/rename_playlist"
         app:showAsAction="never" />

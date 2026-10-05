@@ -83,6 +83,9 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
 
     fun setMusicOnly(musicOnly: Boolean) = musicRepository.setMusicOnly(musicOnly)
 
+    /** Every scanned audio file, ignoring the library's music-only filter. */
+    val allAudio: StateFlow<List<Song>> = musicRepository.allScannedSongs
+
     /** Number of scanned audio files that aren't music (shown or not). */
     fun nonMusicCount(): Int = musicRepository.nonMusicCount()
 
@@ -163,6 +166,11 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
 
     fun removeFromPlaylist(playlistId: Long, song: Song) {
         viewModelScope.launch { userRepository.removeFromPlaylist(playlistId, song.id) }
+    }
+
+    fun removeFromPlaylist(playlistId: Long, songs: List<Song>) {
+        if (songs.isEmpty()) return
+        viewModelScope.launch { userRepository.removeFromPlaylist(playlistId, songs.map { it.id }) }
     }
 
     fun clearRecentlyPlayed() {

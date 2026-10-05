@@ -54,8 +54,13 @@ class AddSongsBottomSheet : BottomSheetDialogFragment() {
 
     /** Selected song ids, in the order they were picked. */
     private val selectedIds = LinkedHashSet<Long>()
+    /** Every library song not in the playlist yet, whatever the type filter shows. */
     private var candidates: List<Song> = emptyList()
+    /** How many candidates the type filter lets through (before searching). */
+    private var shownCount = 0
     private val query = MutableStateFlow("")
+    /** Picker-only "Music only / All audio" filter; starts from the library setting. */
+    private val musicOnly = MutableStateFlow(true)
 
     private lateinit var songAdapter: PickSongAdapter
     private var preview: SongPreviewPlayer? = null
@@ -68,6 +73,7 @@ class AddSongsBottomSheet : BottomSheetDialogFragment() {
             state.getLongArray(KEY_SELECTED)?.let { selectedIds.addAll(it.asList()) }
             resumeMainOnClose = state.getBoolean(KEY_RESUME_MAIN)
         }
+        musicOnly.value = savedInstanceState?.getBoolean(KEY_MUSIC_ONLY) ?: libraryViewModel.musicOnly.value
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -111,6 +117,11 @@ class AddSongsBottomSheet : BottomSheetDialogFragment() {
         }
         binding.btnClear.setOnClickListener { binding.etSearch.text = null }
 
+        binding.filterGroup.check(if (musicOnly.value) R.id.chipMusicOnly else R.id.chipAllAudio)
+        binding.filterGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            musicOnly.value = R.id.chipMusicOnly in checkedIds
+        }
+
         binding.btnSelectAll.setOnClickListener {
             val visibleIds = songAdapter.currentList.map { it.id }
             if (visibleIds.all { it in selectedIds }) selectedIds.removeAll(visibleIds.toSet())
@@ -123,13 +134,18 @@ class AddSongsBottomSheet : BottomSheetDialogFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    libraryViewModel.libraryState
-                        .combine(libraryViewModel.playlistSongs(playlistId)) { state, inPlaylist ->
-                            val existing = inPlaylist.mapTo(HashSet()) { it.id }
-                            (state as? LibraryState.Ready)?.songs.orEmpty().filter { it.id !in existing }
-                        }
-                        .combine(query) { songs, q -> songs to q }
-                        .collect { (songs, q) -> render(songs, q) }
+                    combine(
+                        libraryViewModel.libraryState,
+                        libraryViewModel.allAudio,
+                        libraryViewModel.playlistSongs(playlistId)
+                    ) { state, allAudio, inPlaylist ->
+                        if (state !is LibraryState.Ready) return@combine emptyList()
+                        val existing = inPlaylist.mapTo(HashSet()) { it.id }
+                        allAudio.filter { it.id !in existing }
+                    }
+                        .combine(musicOnly) { songs, onlyMusic -> songs to onlyMusic }
+                        .combine(query) { (songs, onlyMusic), q -> Triple(songs, onlyMusic, q) }
+                        .collect { (songs, onlyMusic, q) -> render(songs, onlyMusic, q) }
                 }
                 // Tick the preview progress bar
                 launch {
@@ -167,6 +183,7 @@ class AddSongsBottomSheet : BottomSheetDialogFragment() {
         super.onSaveInstanceState(outState)
         outState.putLongArray(KEY_SELECTED, selectedIds.toLongArray())
         outState.putBoolean(KEY_RESUME_MAIN, resumeMainOnClose)
+        outState.putBoolean(KEY_MUSIC_ONLY, musicOnly.value)
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -187,13 +204,16 @@ class AddSongsBottomSheet : BottomSheetDialogFragment() {
 
     // ========== Rendering ==========
 
-    private fun render(songs: List<Song>, query: String) {
+    private fun render(songs: List<Song>, onlyMusic: Boolean, query: String) {
         candidates = songs
-        // Songs that left the library (or were added elsewhere) can't stay selected
+        // Songs that left the library (or were added elsewhere) can't stay selected.
+        // Songs hidden by the type filter or search stay selected, like a hidden search result.
         val available = songs.mapTo(HashSet()) { it.id }
         selectedIds.retainAll(available)
 
-        val visible = if (query.isEmpty()) songs else songs.filter {
+        val shown = if (onlyMusic) songs.filter { it.isMusic } else songs
+        shownCount = shown.size
+        val visible = if (query.isEmpty()) shown else shown.filter {
             it.title.contains(query, ignoreCase = true) ||
                 it.artist.contains(query, ignoreCase = true) ||
                 it.album.contains(query, ignoreCase = true)
@@ -201,23 +221,24 @@ class AddSongsBottomSheet : BottomSheetDialogFragment() {
         songAdapter.submitList(visible)
 
         binding.tvEmpty.isVisible = visible.isEmpty()
-        binding.tvEmpty.text = if (songs.isEmpty()) {
-            getString(R.string.all_songs_in_playlist)
-        } else {
-            getString(R.string.no_songs_match, query)
+        binding.tvEmpty.text = when {
+            songs.isEmpty() -> getString(R.string.all_songs_in_playlist)
+            query.isNotEmpty() -> getString(R.string.no_songs_match, query)
+            else -> getString(R.string.no_music_left_to_add)
         }
         renderSelection(visible)
     }
 
     private fun renderSelection(visible: List<Song> = songAdapter.currentList) {
         val count = selectedIds.size
-        val available = resources.getQuantityString(R.plurals.songs_available, candidates.size, candidates.size)
+        val available = resources.getQuantityString(R.plurals.songs_available, shownCount, shownCount)
         binding.tvSelectionInfo.text = if (count > 0) {
             getString(R.string.dot_separated, available, resources.getQuantityString(R.plurals.songs_selected, count, count))
         } else {
             available
         }
         binding.tvSelectionInfo.isVisible = candidates.isNotEmpty()
+        binding.filterGroup.isVisible = candidates.isNotEmpty()
 
         binding.btnSelectAll.isVisible = visible.isNotEmpty()
         binding.btnSelectAll.setText(
@@ -281,6 +302,7 @@ class AddSongsBottomSheet : BottomSheetDialogFragment() {
         private const val ARG_PLAYLIST_NAME = "playlist_name"
         private const val KEY_SELECTED = "selected"
         private const val KEY_RESUME_MAIN = "resume_main"
+        private const val KEY_MUSIC_ONLY = "music_only"
         private const val PROGRESS_TICK_MS = 250L
 
         fun newInstance(playlistId: Long, playlistName: String) = AddSongsBottomSheet().apply {

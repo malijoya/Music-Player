@@ -141,4 +141,105 @@
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <!-- Multi-select actions, floating above the mini player and navigation bar -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/selectionCard"
+        style="@style/Widget.MusicPlayer.Card.Floating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="@dimen/space_md"
+        android:layout_marginBottom="@dimen/space_sm"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/radius_xl"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnCloseSelection"
+                    style="@style/Widget.MusicPlayer.IconButton"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:contentDescription="@string/close_selection"
+                    android:src="@drawable/ic_close" />
+
+                <TextView
+                    android:id="@+id/tvSelectionCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.MusicPlayer.SectionTitle"
+                    android:textSize="16sp"
+                    tools:text="3 selected" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectionAll"
+                    style="@style/Widget.MusicPlayer.Button.Tonal.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:text="@string/select_all" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectionPlay"
+                    style="@style/Widget.MusicPlayer.Button.Action"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/play"
+                    app:icon="@drawable/ic_play" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectionQueue"
+                    style="@style/Widget.MusicPlayer.Button.Action"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/action_queue"
+                    app:icon="@drawable/ic_queue_music" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectionAddTo"
+                    style="@style/Widget.MusicPlayer.Button.Action"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/action_add_to"
+                    app:icon="@drawable/ic_playlist_add" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectionRemove"
+                    style="@style/Widget.MusicPlayer.Button.Action.Destructive"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/action_remove"
+                    app:icon="@drawable/ic_delete" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

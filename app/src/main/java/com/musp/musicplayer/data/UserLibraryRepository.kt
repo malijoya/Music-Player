@@ -67,6 +67,9 @@ class UserLibraryRepository(
     suspend fun removeFromPlaylist(playlistId: Long, songId: Long) =
         playlistDao.removeSong(playlistId, songId)
 
+    suspend fun removeFromPlaylist(playlistId: Long, songIds: List<Long>) =
+        playlistDao.removeSongs(playlistId, songIds)
+
     suspend fun recordPlayed(songId: Long) = recentDao.record(songId, RECENT_KEEP)
 
     suspend fun clearRecent() = recentDao.clear()

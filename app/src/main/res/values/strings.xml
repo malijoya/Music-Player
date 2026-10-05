@@ -102,6 +102,27 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
 
+    <!-- Multi-select in playlists -->
+    <string name="select_songs">Select songs</string>
+    <string name="close_selection">Close selection</string>
+    <string name="action_queue">Queue</string>
+    <string name="action_add_to">Add to…</string>
+    <string name="action_remove">Remove</string>
+    <string name="tap_songs_to_select">Tap songs to select</string>
+    <plurals name="remove_songs_title">
+        <item quantity="one">Remove %d song?</item>
+        <item quantity="other">Remove %d songs?</item>
+    </plurals>
+    <string name="remove_songs_message">They will be removed from “%s”. The files stay on your device.</string>
+    <plurals name="songs_removed_from_playlist">
+        <item quantity="one">Removed %1$d song from “%2$s”</item>
+        <item quantity="other">Removed %1$d songs from “%2$s”</item>
+    </plurals>
+    <plurals name="songs_added_to_queue">
+        <item quantity="one">Added %d song to queue</item>
+        <item quantity="other">Added %d songs to queue</item>
+    </plurals>
+
     <!-- Add songs picker -->
     <string name="add_songs_to">to “%s”</string>
     <string name="search_songs_hint">Search songs or artists</string>
@@ -112,6 +133,7 @@
     <string name="stop_preview">Stop preview of %s</string>
     <string name="all_songs_in_playlist">Every song in your library is already in this playlist</string>
     <string name="no_songs_match">No songs match “%s”</string>
+    <string name="no_music_left_to_add">No music left to add. Switch to “All audio files” to see voice notes and recordings.</string>
     <plurals name="songs_available">
         <item quantity="one">%d song available</item>
         <item quantity="other">%d songs available</item>

@@ -50,9 +50,13 @@ class MusicRepository(
     private val _musicOnly = MutableStateFlow(prefs.musicOnly)
     val musicOnly: StateFlow<Boolean> = _musicOnly.asStateFlow()
 
+    private val _allScannedSongs = MutableStateFlow<List<Song>>(emptyList())
     /** Everything found by the last scan, including files hidden by the music-only filter. */
-    @Volatile
-    private var scannedSongs: List<Song> = emptyList()
+    val allScannedSongs: StateFlow<List<Song>> = _allScannedSongs.asStateFlow()
+
+    private var scannedSongs: List<Song>
+        get() = _allScannedSongs.value
+        set(value) { _allScannedSongs.value = value }
 
     val songs: Flow<List<Song>> = state.map { (it as? LibraryState.Ready)?.songs ?: emptyList() }
         .distinctUntilChanged()

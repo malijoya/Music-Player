@@ -83,6 +83,9 @@ abstract class PlaylistDao {
 
     @Query("DELETE FROM playlist_songs WHERE playlistId = :playlistId AND songId = :songId")
     abstract suspend fun removeSong(playlistId: Long, songId: Long)
+
+    @Query("DELETE FROM playlist_songs WHERE playlistId = :playlistId AND songId IN (:songIds)")
+    abstract suspend fun removeSongs(playlistId: Long, songIds: List<Long>)
 }
 
 @Dao
